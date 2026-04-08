@@ -1,0 +1,112 @@
+from pyray import *
+from components.level import Level
+from components.player import Player
+from components.coin import Coin
+from settings import *
+
+class Game:
+    def __init__(self):
+        self.game_level, self.collectibles, self.enemies = Level.parse_level(LEVEL)
+        self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
+        self.score = 0
+        self.game_state = "PLAYING" 
+        
+        # --- Camera Initialization ---
+        self.camera = Camera2D()
+        self.camera.target = Vector2(self.player.x, self.player.y) 
+        self.camera.offset = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) 
+        self.camera.rotation = 0.0
+        self.camera.zoom = 1.0
+
+    def startup(self):
+        pass
+
+    def update(self):
+        delta_time = get_frame_time()
+        
+        # --- Update ---
+        if self.game_state == "PLAYING":
+            self.player.update(delta_time, self.game_level)
+            
+            # Update Enemies
+            for enemy in self.enemies:
+                enemy.update(delta_time, self.game_level)
+
+            self.camera_update(self.camera, self.player, WORLD_WIDTH, WORLD_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)
+
+            # Check for coin collection
+            collected_indices = self.player.check_collection(self.collectibles)
+            if collected_indices:
+                for index in sorted(collected_indices, reverse=True):
+                    self.collectibles.pop(index)
+                    self.score += 10
+            
+            # Check for enemy collision (Stomp/Death/Reset)
+            hit_type, enemy_index = self.player.check_enemy_collision(self.enemies)
+
+            if hit_type == "STOMP":
+                # Stomp mechanic: Remove enemy, score, and bounce
+                self.enemies.pop(enemy_index)
+                self.score += 100 
+                self.player.vy = STOMP_BOUNCE # Player bounces up
+                
+            elif hit_type == "LETHAL":
+                # Death/Reset mechanic: Penalty and restart
+                self.player.reset()
+                self.score -= 50 
+                if self.score < 0: self.score = 0
+
+    def draw(self):
+        # Start the 2D camera mode
+        begin_mode_2d(self.camera)
+        
+        # 1. Draw the Level
+        Level.draw_level(self.game_level)
+
+        # 2. Draw Collectibles
+        Coin.draw(self.collectibles)
+            
+        # 3. Draw Enemies
+        for enemy in self.enemies:
+            enemy.draw()
+
+        # 4. Draw Player 
+        self.player.draw()
+        
+        # End the 2D camera mode
+        end_mode_2d()
+        
+        # 5. Draw HUD (Drawn on screen, outside of BeginMode2D)
+        score_text = f"Score: {self.score}".encode('utf-8')
+        draw_text(score_text, SCREEN_WIDTH - measure_text(score_text, 20) - 10, 10, 20, BLACK)
+        
+        debug_text = f"Grounded: {self.player.is_grounded} | Enemies: {len(self.enemies)}".encode('utf-8')
+        draw_text(debug_text, 10, 10, 20, BLACK) 
+
+    def shutdown(self):
+        pass
+
+    def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
+        """Centers the camera on the player and clamps the camera's target to the world bounds."""
+        
+        camera.target.x = player.x + player.width / 2
+        camera.target.y = player.y + player.height / 2
+
+        min_x = screen_width / 2
+        max_x = world_width - screen_width / 2
+        
+        if camera.target.x < min_x:
+            camera.target.x = min_x
+        if camera.target.x > max_x:
+            camera.target.x = max_x
+
+        min_y = screen_height / 2
+        max_y = world_height - screen_height / 2
+        
+        if camera.target.y < min_y:
+            camera.target.y = min_y
+        if camera.target.y > max_y:
+            camera.target.y = max_y
+        
+        camera.offset.x = screen_width / 2
+        camera.offset.y = screen_height / 2
