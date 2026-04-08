@@ -17,9 +17,10 @@ class Game:
         self.camera.offset = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) 
         self.camera.rotation = 0.0
         self.camera.zoom = 1.0
+        self.coin = Coin()
 
     def startup(self):
-        pass
+        self.coin.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -56,6 +57,8 @@ class Game:
                 self.score -= 50 
                 if self.score < 0: self.score = 0
 
+            self.coin.update
+
     def draw(self):
         # Start the 2D camera mode
         begin_mode_2d(self.camera)
@@ -64,7 +67,7 @@ class Game:
         Level.draw_level(self.game_level)
 
         # 2. Draw Collectibles
-        Coin.draw(self.collectibles)
+        self.coin.draw(self.collectibles)
             
         # 3. Draw Enemies
         for enemy in self.enemies:
@@ -84,7 +87,7 @@ class Game:
         draw_text(debug_text, 10, 10, 20, BLACK) 
 
     def shutdown(self):
-        pass
+        self.coin.shutdown
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""
