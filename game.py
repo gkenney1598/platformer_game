@@ -6,7 +6,7 @@ from settings import *
 
 class Game:
     def __init__(self):
-        self.game_level, self.collectibles, self.enemies = Level.parse_level(LEVEL)
+        self.game_level, self.enemies, self.hay = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
@@ -17,10 +17,11 @@ class Game:
         self.camera.offset = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) 
         self.camera.rotation = 0.0
         self.camera.zoom = 1.0
-        self.coin = Coin()
+        # self.coin = Coin()
 
     def startup(self):
-        self.coin.startup()
+        pass
+        # self.coin.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -30,34 +31,34 @@ class Game:
             self.player.update(delta_time, self.game_level)
             
             # Update Enemies
-            for enemy in self.enemies:
-                enemy.update(delta_time, self.game_level)
+            # for enemy in self.enemies:
+            #     enemy.update(delta_time, self.game_level)
 
             self.camera_update(self.camera, self.player, WORLD_WIDTH, WORLD_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-            # Check for coin collection
-            collected_indices = self.player.check_collection(self.collectibles)
+            #hay collection
+            collected_indices = self.player.check_collection(self.hay)
             if collected_indices:
                 for index in sorted(collected_indices, reverse=True):
-                    self.collectibles.pop(index)
-                    self.score += 10
+                    self.hay.pop(index)
+                    self.player.hay += 1
             
             # Check for enemy collision (Stomp/Death/Reset)
-            hit_type, enemy_index = self.player.check_enemy_collision(self.enemies)
+            # hit_type, enemy_index = self.player.check_enemy_collision(self.enemies)
 
-            if hit_type == "STOMP":
-                # Stomp mechanic: Remove enemy, score, and bounce
-                self.enemies.pop(enemy_index)
-                self.score += 100 
-                self.player.vy = STOMP_BOUNCE # Player bounces up
+            # if hit_type == "STOMP":
+            #     # Stomp mechanic: Remove enemy, score, and bounce
+            #     self.enemies.pop(enemy_index)
+            #     self.score += 100 
+            #     self.player.vy = STOMP_BOUNCE # Player bounces up
                 
-            elif hit_type == "LETHAL":
-                # Death/Reset mechanic: Penalty and restart
-                self.player.reset()
-                self.score -= 50 
-                if self.score < 0: self.score = 0
+            # elif hit_type == "LETHAL":
+            #     # Death/Reset mechanic: Penalty and restart
+            #     self.player.reset()
+            #     self.score -= 50 
+            #     if self.score < 0: self.score = 0
 
-            self.coin.update
+            # self.coin.update
 
     def draw(self):
         # Start the 2D camera mode
@@ -67,11 +68,12 @@ class Game:
         Level.draw_level(self.game_level)
 
         # 2. Draw Collectibles
-        self.coin.draw(self.collectibles)
+        for hay in self.hay:
+            hay.draw()
             
         # 3. Draw Enemies
-        for enemy in self.enemies:
-            enemy.draw()
+        # for enemy in self.enemies:
+        #     enemy.draw()
 
         # 4. Draw Player 
         self.player.draw()
@@ -86,8 +88,12 @@ class Game:
         debug_text = f"Grounded: {self.player.is_grounded} | Enemies: {len(self.enemies)}".encode('utf-8')
         draw_text(debug_text, 10, 10, 20, BLACK) 
 
+        hay_text = f"Number of hay: {self.player.hay}"
+        draw_text(hay_text, 10, 40, 20, BLACK)
+
     def shutdown(self):
-        self.coin.shutdown
+        pass
+        # self.coin.shutdown
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

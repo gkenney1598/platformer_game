@@ -10,3 +10,15 @@
 Next/TO DO :
 * Debug and animate coin texture
 * Plan game theme/features
+
+### Date: 04/12/26
+**Add "Pick-up" Mechanic**
+......
+**Implementation**
+*Technical Plan/Credit*: Refactored coin code and added key for hay collection
+*Content Credit*: N/A
+**feat: add hay pick-up**
+.......
+Next/TO DO :
+* Add give hay to sheep and make sheep friendly
+* Add "grab" sheep

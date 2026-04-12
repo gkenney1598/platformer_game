@@ -2,6 +2,7 @@ from pyray import *
 from settings import *
 from enums import Tiles
 from components.enemy import Enemy
+from components.hay import Hay
 
 class Level:
     def parse_level(level):
@@ -11,6 +12,7 @@ class Level:
         """
         coins = []
         enemies = []
+        hay = []
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
         new_level = [row[:] for row in level] 
         
@@ -28,8 +30,13 @@ class Level:
                     # Enemy position is top-left
                     enemies.append(Enemy(x, y))
                     new_level[r][c] = Tiles.AIR 
+
+                elif new_level[r][c] == Tiles.HAY:
+                    hay.append(Hay(x, y))
+                    new_level[r][c] = Tiles.AIR
+
                     
-        return new_level, coins, enemies
+        return new_level, enemies, hay
     
     def draw_level(level):
         """Draws the solid tiles of the level map."""

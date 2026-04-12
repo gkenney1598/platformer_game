@@ -19,6 +19,8 @@ class Player:
         self.vy = 0.0
         self.is_grounded = False
 
+        self.hay = 0
+
     def get_rect(self):
         """Returns the player's collision bounding box (top-left, width, height)."""
         return (self.x, self.y, self.width, self.height)
@@ -99,19 +101,21 @@ class Player:
                             
                         player_rect = self.get_rect()
                         px, py, pw, ph = player_rect
+
+                elif level[row][col] == Tiles.HAY:
+                    tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                    if check_collision_recs(player_rect, tile_rect):
+                        level[row][col] == Tiles.AIR
+                        self.hay += 1
                         
-    def check_collection(self, collectibles):
+    def check_collection(self, hay):
         """Checks for collision with coins and returns indices of collected coins."""
         collected_indices = []
         player_rect = self.get_rect()
-        coin_collision_size = TILE_SIZE * 0.5
         
-        for i, (cx, cy) in enumerate(collectibles):
-            coin_x = cx - coin_collision_size / 2
-            coin_y = cy - coin_collision_size / 2
-            coin_rect = (coin_x, coin_y, coin_collision_size, coin_collision_size)
+        for i, hay in enumerate(hay):
             
-            if check_collision_recs(player_rect, coin_rect):
+            if check_collision_recs(player_rect, hay.rect) and is_key_pressed(KeyboardKey.KEY_F):
                 collected_indices.append(i)
                 
         return collected_indices
