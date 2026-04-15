@@ -3,6 +3,7 @@ from settings import *
 from enums import Tiles
 from components.enemy import Enemy
 from components.hay import Hay
+from components.sheep import Sheep
 
 class Level:
     def parse_level(level):
@@ -10,7 +11,7 @@ class Level:
         Parses the level map, extracts all dynamic entities (coins, enemies), 
         replaces their spawn points with air, and returns the modified collision map and entity lists.
         """
-        coins = []
+        sheep = []
         enemies = []
         hay = []
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
@@ -21,12 +22,12 @@ class Level:
                 x = c * TILE_SIZE
                 y = r * TILE_SIZE
 
-                if new_level[r][c] == Tiles.COIN:
-                    # Coin position is center
-                    coins.append((x + TILE_SIZE / 2, y + TILE_SIZE / 2))
-                    new_level[r][c] = Tiles.AIR
+                # if new_level[r][c] == Tiles.COIN:
+                #     # Coin position is center
+                #     coins.append((x + TILE_SIZE / 2, y + TILE_SIZE / 2))
+                #     new_level[r][c] = Tiles.AIR
                 
-                elif new_level[r][c] == Tiles.ENEMY:
+                if new_level[r][c] == Tiles.ENEMY:
                     # Enemy position is top-left
                     enemies.append(Enemy(x, y))
                     new_level[r][c] = Tiles.AIR 
@@ -35,8 +36,12 @@ class Level:
                     hay.append(Hay(x, y))
                     new_level[r][c] = Tiles.AIR
 
+                if new_level[r][c] == Tiles.SHEEP:
+                    sheep.append(Sheep(x, y))
+                    new_level[r][c] = Tiles.AIR
+
                     
-        return new_level, enemies, hay
+        return new_level, sheep, enemies, hay
     
     def draw_level(level):
         """Draws the solid tiles of the level map."""

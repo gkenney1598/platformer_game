@@ -22,3 +22,14 @@ Next/TO DO :
 Next/TO DO :
 * Add give hay to sheep and make sheep friendly
 * Add "grab" sheep
+
+### Date: 04/15/26
+**Add Sheep with Friendly/Unfriendly Toggle**
+......
+**Implementation**
+*Technical Plan/Credit*: Based on enemy movement
+*Content Credit*: N/A
+**feat: add sheep and feed sheep ability**
+.......
+Next/TO DO :
+* Add "grab" sheep after they become friendly

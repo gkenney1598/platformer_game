@@ -6,14 +6,14 @@ from settings import *
 
 class Game:
     def __init__(self):
-        self.game_level, self.enemies, self.hay = Level.parse_level(LEVEL)
+        self.game_level, self.sheep, self.enemies, self.hay = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
         
         # --- Camera Initialization ---
         self.camera = Camera2D()
-        self.camera.target = Vector2(self.player.x, self.player.y) 
+        self.camera.target = Vector2(self.player.rect.x, self.player.rect.y) 
         self.camera.offset = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) 
         self.camera.rotation = 0.0
         self.camera.zoom = 1.0
@@ -33,6 +33,8 @@ class Game:
             # Update Enemies
             # for enemy in self.enemies:
             #     enemy.update(delta_time, self.game_level)
+            for sheep in self.sheep:
+                sheep.update(delta_time, self.game_level)
 
             self.camera_update(self.camera, self.player, WORLD_WIDTH, WORLD_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)
 
@@ -42,6 +44,13 @@ class Game:
                 for index in sorted(collected_indices, reverse=True):
                     self.hay.pop(index)
                     self.player.hay += 1
+            
+            collided_sheep = self.player.check_sheep_collision(self.sheep)
+            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R):
+                if self.player.hay > 0:
+                    self.sheep[collided_sheep].hay += 1
+                    self.player.hay -= 1
+
             
             # Check for enemy collision (Stomp/Death/Reset)
             # hit_type, enemy_index = self.player.check_enemy_collision(self.enemies)
@@ -75,6 +84,9 @@ class Game:
         # for enemy in self.enemies:
         #     enemy.draw()
 
+        for sheep in self.sheep:
+            sheep.draw()
+
         # 4. Draw Player 
         self.player.draw()
         
@@ -98,8 +110,8 @@ class Game:
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""
         
-        camera.target.x = player.x + player.width / 2
-        camera.target.y = player.y + player.height / 2
+        camera.target.x = player.rect.x + player.rect.width / 2
+        camera.target.y = player.rect.y + player.rect.height / 2
 
         min_x = screen_width / 2
         max_x = world_width - screen_width / 2

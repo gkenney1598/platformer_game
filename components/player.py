@@ -9,10 +9,11 @@ class Player:
         self.start_x = x 
         self.start_y = y
         # Current position (top-left for collision)
-        self.x = x
-        self.y = y
-        self.width = PLAYER_WIDTH
-        self.height = PLAYER_HEIGHT
+        # self.x = x
+        # self.y = y
+        # self.width = PLAYER_WIDTH
+        # self.height = PLAYER_HEIGHT
+        self.rect = Rectangle(x, y, PLAYER_WIDTH, PLAYER_WIDTH)
         
         # Physics
         self.vx = 0.0
@@ -21,9 +22,9 @@ class Player:
 
         self.hay = 0
 
-    def get_rect(self):
-        """Returns the player's collision bounding box (top-left, width, height)."""
-        return (self.x, self.y, self.width, self.height)
+    # def get_rect(self):
+    #     """Returns the player's collision bounding box (top-left, width, height)."""
+    #     return (self.x, self.y, self.width, self.height)
 
     def update(self, delta_time, level):
         # 1. Handle Input (Horizontal Movement)
@@ -42,7 +43,7 @@ class Player:
             self.vy = JUMP_VELOCITY
 
         # 3. Apply Gravity
-        self.vy += GRAVITY * delta_time
+        self.vy += GRAVITY_PLAYER * delta_time
         if self.vy > 1000:
             self.vy = 1000
 
@@ -52,20 +53,20 @@ class Player:
         # 4. Apply Movement (Separated for X and Y collision checks)
         
         # Apply X movement
-        self.x += self.vx * delta_time
+        self.rect.x += self.vx * delta_time
         self.handle_tile_collision(level, 'X')
         
         # Apply Y movement
-        self.y += self.vy * delta_time
+        self.rect.y += self.vy * delta_time
         self.handle_tile_collision(level, 'Y')
         
         # --- Safety Clamp to World Bounds ---
-        self.x = max(0, min(self.x, WORLD_WIDTH - self.width))
+        self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
         
     def handle_tile_collision(self, level, axis):
         """Performs AABB collision checks against solid tiles and resolves the collision."""
-        player_rect = self.get_rect()
-        px, py, pw, ph = player_rect
+        player_rect = self.rect
+        px, py, pw, ph = player_rect.x, player_rect.y, player_rect.width, player_rect.height
         
         min_col = int(px / TILE_SIZE)
         max_col = int((px + pw) / TILE_SIZE)
@@ -85,22 +86,22 @@ class Player:
                         
                         if axis == 'X':
                             if self.vx > 0: # Moving Right
-                                self.x = tile_rect[0] - self.width
+                                self.rect.x = tile_rect[0] - self.rect.width
                             elif self.vx < 0: # Moving Left
-                                self.x = tile_rect[0] + TILE_SIZE
+                                self.rect.x = tile_rect[0] + TILE_SIZE
                             self.vx = 0.0 
                             
                         elif axis == 'Y':
                             if self.vy >= 0: # Falling (Hitting Ground)
-                                self.y = tile_rect[1] - self.height
+                                self.rect.y = tile_rect[1] - self.rect.height
                                 self.is_grounded = True 
                             elif self.vy < 0: # Jumping (Hitting Ceiling)
-                                self.y = tile_rect[1] + TILE_SIZE
+                                self.rect.y = tile_rect[1] + TILE_SIZE
                                 
                             self.vy = 0.0 
                             
-                        player_rect = self.get_rect()
-                        px, py, pw, ph = player_rect
+                        player_rect = self.rect
+                        px, py, pw, ph = player_rect.x, player_rect.y, player_rect.width, player_rect.height
 
                 elif level[row][col] == Tiles.HAY:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -111,7 +112,7 @@ class Player:
     def check_collection(self, hay):
         """Checks for collision with coins and returns indices of collected coins."""
         collected_indices = []
-        player_rect = self.get_rect()
+        player_rect = self.rect
         
         for i, hay in enumerate(hay):
             
@@ -120,44 +121,53 @@ class Player:
                 
         return collected_indices
     
-    def check_enemy_collision(self, enemies):
-        """Checks for collision with enemies and determines outcome (stomp or death).
-        Returns (hit_type, enemy_index) or (None, -1).
-        hit_type: "STOMP" (safe kill) or "LETHAL" (death)
-        """
-        player_rect = self.get_rect()
-        px, py, pw, ph = player_rect
+    def check_sheep_collision(self, sheep):
         
-        for i, enemy in enumerate(enemies):
-            enemy_rect = enemy.get_rect()
+        for i, sheep in enumerate(sheep):
+
+            if check_collision_recs(self.rect, sheep.rect):
+                return i
+                              
+        return -1
+    
+    # def check_enemy_collision(self, enemies):
+    #     """Checks for collision with enemies and determines outcome (stomp or death).
+    #     Returns (hit_type, enemy_index) or (None, -1).
+    #     hit_type: "STOMP" (safe kill) or "LETHAL" (death)
+    #     """
+    #     player_rect = self.get_rect()
+    #     px, py, pw, ph = player_rect
+        
+    #     for i, enemy in enumerate(enemies):
+    #         enemy_rect = enemy.get_rect()
             
-            if check_collision_recs(player_rect, enemy_rect):
+    #         if check_collision_recs(player_rect, enemy_rect):
                 
-                # STOMP Condition: 
-                # 1. Player is falling (vy > 0) 
-                # 2. Player's bottom is above the enemy's mid-point (approximate stomping zone)
-                is_stompable_zone = py + ph < enemy.y + enemy.height * 0.5 
+    #             # STOMP Condition: 
+    #             # 1. Player is falling (vy > 0) 
+    #             # 2. Player's bottom is above the enemy's mid-point (approximate stomping zone)
+    #             is_stompable_zone = py + ph < enemy.y + enemy.height * 0.5 
                 
-                if self.vy > 0 and is_stompable_zone:
-                    return "STOMP", i
-                else:
-                    # Lethal collision (side, head, or missing the stomp zone)
-                    return "LETHAL", i
+    #             if self.vy > 0 and is_stompable_zone:
+    #                 return "STOMP", i
+    #             else:
+    #                 # Lethal collision (side, head, or missing the stomp zone)
+    #                 return "LETHAL", i
                     
-        return None, -1
+    #     return None, -1
     
     def reset(self):
         """Resets the player to their starting position."""
-        self.x = self.start_x
-        self.y = self.start_y
+        self.rect.x = self.start_x
+        self.rect.y = self.start_y
         self.vx = 0.0
         self.vy = 0.0
         self.is_grounded = False
 
     def draw(self):
         """Draws the player at their world coordinates."""
-        draw_rectangle(int(self.x), int(self.y), int(self.width), int(self.height), BLUE) 
+        draw_rectangle_rec(self.rect, BLUE) 
         if self.is_grounded:
-             draw_rectangle_lines(int(self.x), int(self.y), int(self.width), int(self.height), WHITE)
+             draw_rectangle_lines_ex(self.rect, 2, WHITE)
         else:
-             draw_rectangle_lines(int(self.x), int(self.y), int(self.width), int(self.height), GRAY)
+             draw_rectangle_lines_ex(self.rect, 2, GRAY)

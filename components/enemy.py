@@ -23,7 +23,7 @@ class Enemy:
         # 1. Apply Gravity
         if self.is_grounded:
             self.vy = 0.0
-        self.vy += GRAVITY * delta_time
+        self.vy += GRAVITY_ENTITY * delta_time
         self.is_grounded = False 
 
         # 2. Apply Movement 
