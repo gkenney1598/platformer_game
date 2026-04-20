@@ -44,3 +44,14 @@ Next/TO DO :
 .......
 Next/TO DO :
 * Add transform into sheep
+
+### Date: 04/19/26
+**Transform into sheep after befriending one**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add player transformation into sheep**
+.......
+Next/TO DO :
+* Add transform into sheep

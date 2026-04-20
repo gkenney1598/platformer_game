@@ -8,6 +8,10 @@ class PlayerState(enumerate):
     POWER_ATTACK = 6 
     IDLE = 7
     JUMPING = 8
+    SHEEP_IDLE = 9
+    SHEEP_WALKING = 10
+    SHEEP_SNEAK = 11
+    SHEEP_ATTACKING = 12
 class Tiles(enumerate):
     AIR = 0
     SOLID = 1

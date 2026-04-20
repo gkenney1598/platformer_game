@@ -20,6 +20,7 @@ class Player:
         self.is_holding = False
         self.state = PlayerState.IDLE
         self.held_object = None
+        self.can_transform = False
 
     def update(self, delta_time, level, held_object = None):
         # 1. Handle Input (Horizontal Movement)
@@ -57,6 +58,12 @@ class Player:
         
         # --- Safety Clamp to World Bounds ---
         self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
+
+        if is_key_pressed(KeyboardKey.KEY_T) and self.can_transform:
+            self.state = PlayerState.SHEEP_IDLE
+        if is_key_pressed(KeyboardKey.KEY_Y):
+            self.state = PlayerState.IDLE
+        
 
         match self.state:
             case PlayerState.HOLDING_SHEEP:
@@ -174,8 +181,12 @@ class Player:
 
     def draw(self):
         """Draws the player at their world coordinates."""
-        draw_rectangle_rec(self.rect, BLUE) 
-        if self.is_grounded:
-             draw_rectangle_lines_ex(self.rect, 2, WHITE)
-        else:
-             draw_rectangle_lines_ex(self.rect, 2, GRAY)
+        match self.state:
+            case PlayerState.SHEEP_IDLE:
+                draw_rectangle_rec(self.rect, WHITE) 
+            case _:
+                draw_rectangle_rec(self.rect, BLUE) 
+                if self.is_grounded:
+                    draw_rectangle_lines_ex(self.rect, 2, WHITE)
+                else:
+                    draw_rectangle_lines_ex(self.rect, 2, GRAY)

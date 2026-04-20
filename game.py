@@ -51,6 +51,7 @@ class Game:
                 if self.player.hay > 0:
                     self.sheep[collided_sheep].hay += 1
                     self.player.hay -= 1
+                    self.player.can_transform = True
             if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheep[collided_sheep].is_friendly:
                 self.player.state = PlayerState.HOLDING_SHEEP
                 self.player.hold_object(self.sheep[collided_sheep])
