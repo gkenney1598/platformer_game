@@ -12,6 +12,7 @@ class Sheep:
         self.is_grounded = True
         self.is_friendly = False
         self.hay = 0
+        self.is_held = False
     
     def startup(self):
         pass
@@ -23,18 +24,19 @@ class Sheep:
         self.vy += GRAVITY_ENTITY * delta_time
         self.is_grounded = False 
 
-        # 2. Apply Movement 
-
-        # Apply X movement
-        self.rect.x += self.vx * delta_time
-        self.handle_tile_collision(level, Axis.X_AXIS)
-        
-        # Apply Y movement
-        self.rect.y += self.vy * delta_time
-        self.handle_tile_collision(level, Axis.Y_AXIS)
+        if not self.is_held:
+            self.rect.x += self.vx * delta_time
+            self.handle_tile_collision(level, Axis.X_AXIS)
+            
+            self.rect.y += self.vy * delta_time
+            self.handle_tile_collision(level, Axis.Y_AXIS)
 
         if not self.is_friendly and self.hay >= 1:
             self.is_friendly = True
+
+    def move_with_player(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
@@ -89,15 +91,6 @@ class Sheep:
             draw_text("F", center_x, center_y, 10, BLACK)
         else:
             draw_text("UF", center_x, center_y, 10, BLACK)
-        
-        # if self.vx > 0: # Moving Right
-        #     draw_triangle(Vector2(center_x + indicator_size, center_y), 
-        #                  Vector2(center_x - indicator_size, center_y - indicator_size), 
-        #                  Vector2(center_x - indicator_size, center_y + indicator_size), BLACK)
-        # elif self.vx < 0: # Moving Left
-        #     draw_triangle(Vector2(center_x - indicator_size, center_y), 
-        #                  Vector2(center_x + indicator_size, center_y - indicator_size), 
-        #                  Vector2(center_x + indicator_size, center_y + indicator_size), BLACK)
             
     def shutdown(self):
         pass

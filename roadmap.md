@@ -33,3 +33,14 @@ Next/TO DO :
 .......
 Next/TO DO :
 * Add "grab" sheep after they become friendly
+
+### Date: 04/19/26
+**Add Sheep with Friendly/Unfriendly Toggle**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: grab and drop sheep**
+.......
+Next/TO DO :
+* Add transform into sheep

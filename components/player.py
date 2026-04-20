@@ -1,18 +1,14 @@
 from pyray import *
 from settings import *
-from enums import Tiles
+from enums import Tiles, PlayerState
 
-
+#TO-DO: refactor previous code to use PlayerState
 class Player:
     def __init__(self, x, y):
         # Store starting position for reset
         self.start_x = x 
         self.start_y = y
-        # Current position (top-left for collision)
-        # self.x = x
-        # self.y = y
-        # self.width = PLAYER_WIDTH
-        # self.height = PLAYER_HEIGHT
+
         self.rect = Rectangle(x, y, PLAYER_WIDTH, PLAYER_WIDTH)
         
         # Physics
@@ -21,12 +17,11 @@ class Player:
         self.is_grounded = False
 
         self.hay = 0
+        self.is_holding = False
+        self.state = PlayerState.IDLE
+        self.held_object = None
 
-    # def get_rect(self):
-    #     """Returns the player's collision bounding box (top-left, width, height)."""
-    #     return (self.x, self.y, self.width, self.height)
-
-    def update(self, delta_time, level):
+    def update(self, delta_time, level, held_object = None):
         # 1. Handle Input (Horizontal Movement)
         self.vx = 0.0
         if is_key_down(KeyboardKey.KEY_LEFT) or is_key_down(KeyboardKey.KEY_A):
@@ -62,6 +57,10 @@ class Player:
         
         # --- Safety Clamp to World Bounds ---
         self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
+
+        match self.state:
+            case PlayerState.HOLDING_SHEEP:
+                self.held_object.move_with_player(self.rect.x, self.rect.y - self.held_object.rect.height)
         
     def handle_tile_collision(self, level, axis):
         """Performs AABB collision checks against solid tiles and resolves the collision."""
@@ -163,6 +162,15 @@ class Player:
         self.vx = 0.0
         self.vy = 0.0
         self.is_grounded = False
+
+    def hold_object(self, held_object):
+        match self.state:
+            case PlayerState.HOLDING_SHEEP:
+                held_object.is_held = True
+                self.held_object = held_object
+                
+                # held_object.rect.x = self.rect.x
+                # held_object.rect.y = self.rect.y - held_object.rect.height
 
     def draw(self):
         """Draws the player at their world coordinates."""

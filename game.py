@@ -3,6 +3,7 @@ from components.level import Level
 from components.player import Player
 from components.coin import Coin
 from settings import *
+from enums import PlayerState
 
 class Game:
     def __init__(self):
@@ -46,10 +47,18 @@ class Game:
                     self.player.hay += 1
             
             collided_sheep = self.player.check_sheep_collision(self.sheep)
-            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R):
+            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_F):
                 if self.player.hay > 0:
                     self.sheep[collided_sheep].hay += 1
                     self.player.hay -= 1
+            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheep[collided_sheep].is_friendly:
+                self.player.state = PlayerState.HOLDING_SHEEP
+                self.player.hold_object(self.sheep[collided_sheep])
+
+            if is_key_pressed(KeyboardKey.KEY_G) and self.player.state == PlayerState.HOLDING_SHEEP:
+                self.player.state = PlayerState.IDLE
+                self.sheep[collided_sheep].is_held = False
+                self.sheep[collided_sheep].rect.y += self.sheep[collided_sheep].rect.height
 
             
             # Check for enemy collision (Stomp/Death/Reset)
