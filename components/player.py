@@ -9,8 +9,8 @@ class Player:
         self.start_x = x 
         self.start_y = y
 
-        self.rect = Rectangle(x, y, PLAYER_WIDTH, PLAYER_WIDTH)
-        self.attention_box = Rectangle(x - 100, y - 100, PLAYER_WIDTH + 200, PLAYER_WIDTH + 200)
+        self.rect = Rectangle(x, y, PLAYER_WIDTH, PLAYER_HEIGHT)
+        self.attention_box = Rectangle(x - 200, y - 10, PLAYER_WIDTH + 400, PLAYER_HEIGHT + 20)
         
         # Physics
         self.vx = 0.0
@@ -53,10 +53,12 @@ class Player:
         
         # Apply X movement
         self.rect.x += self.vx * delta_time
+        self.attention_box.x = self.rect.x - 200
         self.handle_tile_collision(level, 'X')
         
         # Apply Y movement
         self.rect.y += self.vy * delta_time
+        self.attention_box.y = self.rect.y - 10
         self.handle_tile_collision(level, 'Y')
         
         # --- Safety Clamp to World Bounds ---
@@ -190,7 +192,6 @@ class Player:
 
     def draw(self):
         """Draws the player at their world coordinates."""
-        draw_rectangle_rec(self.attention_box, BLUE)
         match self.state:
             case PlayerState.SHEEP_IDLE:
                 draw_rectangle_rec(self.rect, WHITE) 

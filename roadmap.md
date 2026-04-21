@@ -80,3 +80,15 @@ Next/TO DO:
 Next/TO DO:
 * Add "attention box" for player for when enemy notices it
 * Add cyclops
+
+### Date: 04/20/26
+**Add "attention box" for player for when enemy notices it**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add player attention box**
+.......
+Next/TO DO:
+* Add cyclops
+* When collision between attenton box and cyclops, cyclops state switched to "angry"
