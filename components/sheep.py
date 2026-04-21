@@ -13,6 +13,7 @@ class Sheep:
         self.is_friendly = False
         self.hay = 0
         self.is_held = False
+        self.walking_y = y
     
     def startup(self):
         pass
@@ -23,6 +24,7 @@ class Sheep:
             self.vy = 0.0
         self.vy += GRAVITY_ENTITY * delta_time
         self.is_grounded = False 
+
 
         if not self.is_held:
             self.rect.x += self.vx * delta_time
@@ -54,8 +56,7 @@ class Sheep:
             for col in range(min_col, max_col + 1):
                 if row < 0 or row >= TILE_ROWS or col < 0 or col >= TILE_COLS:
                     continue
-
-                if level[row][col] == Tiles.SOLID:
+                if level[row][col] == Tiles.SOLID or level[row][col] == Tiles.BOUNDARY:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(sheep_rect, tile_rect):

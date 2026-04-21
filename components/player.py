@@ -64,7 +64,6 @@ class Player:
         if is_key_pressed(KeyboardKey.KEY_Y):
             self.state = PlayerState.IDLE
         
-
         match self.state:
             case PlayerState.HOLDING_SHEEP:
                 self.held_object.move_with_player(self.rect.x, self.rect.y - self.held_object.rect.height)

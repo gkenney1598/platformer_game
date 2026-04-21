@@ -36,9 +36,13 @@ class Level:
                     hay.append(Hay(x, y))
                     new_level[r][c] = Tiles.AIR
 
-                if new_level[r][c] == Tiles.SHEEP:
+                elif new_level[r][c] == Tiles.SHEEP:
                     sheep.append(Sheep(x, y))
                     new_level[r][c] = Tiles.AIR
+
+                elif new_level[r][c] == Tiles.BOUNDARY:
+                    new_level[r][c] = Tiles.BOUNDARY
+
 
                     
         return new_level, sheep, enemies, hay

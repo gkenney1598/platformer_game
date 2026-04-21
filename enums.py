@@ -18,6 +18,7 @@ class Tiles(enumerate):
     SHEEP = 2 
     ENEMY = 3
     HAY = 4 
+    BOUNDARY = 5
 
 class Axis(enumerate):
     X_AXIS = 0
