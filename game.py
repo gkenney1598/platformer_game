@@ -20,6 +20,8 @@ class Game:
         self.camera.zoom = 1.0
         # self.coin = Coin()
 
+        self.held_sheep_index = None
+
     def startup(self):
         pass
         # self.coin.startup()
@@ -54,12 +56,16 @@ class Game:
                     self.player.can_transform = True
             if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheep[collided_sheep].is_friendly:
                 self.player.state = PlayerState.HOLDING_SHEEP
+                self.held_sheep_index = collided_sheep
                 self.player.hold_object(self.sheep[collided_sheep])
 
+        
             if is_key_pressed(KeyboardKey.KEY_G) and self.player.state == PlayerState.HOLDING_SHEEP:
+                # self.sheep[collided_sheep].rect.y = self.sheep[collided_sheep].walking_y
+                self.sheep[self.held_sheep_index].is_grounded = False
+                
+                self.sheep[self.held_sheep_index].is_held = False
                 self.player.state = PlayerState.IDLE
-                self.sheep[collided_sheep].is_held = False
-                self.sheep[collided_sheep].rect.y += self.sheep[collided_sheep].rect.height
 
             
             # Check for enemy collision (Stomp/Death/Reset)
