@@ -1,7 +1,7 @@
 from pyray import *
 from settings import *
 from enums import Tiles
-from platformer_game.components.cyclops import Enemy
+from components.cyclops import Cyclops
 from components.hay import Hay
 from components.sheep import Sheep
 from components.vase import Vase
@@ -13,7 +13,7 @@ class Level:
         replaces their spawn points with air, and returns the modified collision map and entity lists.
         """
         sheep = []
-        enemies = []
+        cyclops = []
         hay = []
         vase = []
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
@@ -29,9 +29,9 @@ class Level:
                 #     coins.append((x + TILE_SIZE / 2, y + TILE_SIZE / 2))
                 #     new_level[r][c] = Tiles.AIR
                 
-                if new_level[r][c] == Tiles.ENEMY:
+                if new_level[r][c] == Tiles.CYCLOPS:
                     # Enemy position is top-left
-                    enemies.append(Enemy(x, y))
+                    cyclops.append(Cyclops(x, y))
                     new_level[r][c] = Tiles.AIR 
 
                 elif new_level[r][c] == Tiles.HAY:
@@ -55,7 +55,7 @@ class Level:
 
 
                     
-        return new_level, sheep, enemies, hay, vase
+        return new_level, sheep, cyclops, hay, vase
     
     def draw_level(level):
         """Draws the solid tiles of the level map."""

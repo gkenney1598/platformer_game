@@ -1,14 +1,15 @@
 from pyray import *
 from settings import *
-from enums import Tiles
+from enums import Tiles, CyclopsState
 
-class Enemy:
+class Cyclops:
     def __init__(self, x, y):
-        # Position (top-left for collision)
         self.x = x
         self.y = y
         self.width = TILE_SIZE * 0.7
         self.height = TILE_SIZE * 0.7
+        self.rect = Rectangle(x, y, self.width, self.height)
+        self.state = CyclopsState.IDLE
         
         # Physics/Movement
         self.vx = ENEMY_SPEED # Start moving right
@@ -17,7 +18,7 @@ class Enemy:
 
     def get_rect(self):
         """Returns the enemy's collision bounding box."""
-        return (self.x, self.y, self.width, self.height)
+        return self.rect
 
     def update(self, delta_time, level):
         # 1. Apply Gravity
@@ -29,17 +30,17 @@ class Enemy:
         # 2. Apply Movement 
 
         # Apply X movement
-        self.x += self.vx * delta_time
+        self.rect.x += self.vx * delta_time
         self.handle_tile_collision(level, 'X')
         
         # Apply Y movement
-        self.y += self.vy * delta_time
+        self.rect.y += self.vy * delta_time
         self.handle_tile_collision(level, 'Y')
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
         enemy_rect = self.get_rect()
-        px, py, pw, ph = enemy_rect
+        px, py, pw, ph = enemy_rect.x, enemy_rect.y, enemy_rect.width, enemy_rect.height
         
         min_col = int(px / TILE_SIZE)
         max_col = int((px + pw) / TILE_SIZE)
@@ -52,7 +53,7 @@ class Enemy:
                 if row < 0 or row >= TILE_ROWS or col < 0 or col >= TILE_COLS:
                     continue
                 
-                if level[row][col] == Tiles.SOLID:
+                if level[row][col] == Tiles.SOLID or level[row][col] == Tiles.BOUNDARY:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(enemy_rect, tile_rect):
@@ -60,14 +61,14 @@ class Enemy:
                         if axis == 'X':
                             # Reverses direction on horizontal collision
                             if self.vx > 0:
-                                self.x = tile_rect[0] - self.width
+                                self.rect.x = tile_rect[0] - self.rect.width
                             elif self.vx < 0:
-                                self.x = tile_rect[0] + TILE_SIZE
+                                self.rect.x = tile_rect[0] + TILE_SIZE
                             self.vx *= -1 # Reverse direction
                             
                         elif axis == 'Y':
                             if self.vy >= 0: # Hitting Ground
-                                self.y = tile_rect[1] - self.height
+                                self.rect.y = tile_rect[1] - self.rect.height
                                 self.is_grounded = True 
                                 
                             self.vy = 0.0 
@@ -76,20 +77,17 @@ class Enemy:
 
     def draw(self):
         """Draws the enemy as a red rectangle with a directional indicator."""
-        draw_rectangle(int(self.x), int(self.y), int(self.width), int(self.height), RED)
-        draw_rectangle_lines(int(self.x), int(self.y), int(self.width), int(self.height), BLACK)
-        
+        draw_rectangle(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), RED)
+        draw_rectangle_lines(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), BLACK)
+
         # Draw a small indicator for direction
-        center_x = self.x + self.width / 2
-        center_y = self.y + self.height / 2
-        indicator_size = self.width * 0.2
-        
-        if self.vx > 0: # Moving Right
-            draw_triangle(Vector2(center_x + indicator_size, center_y), 
-                         Vector2(center_x - indicator_size, center_y - indicator_size), 
-                         Vector2(center_x - indicator_size, center_y + indicator_size), WHITE)
-        elif self.vx < 0: # Moving Left
-            draw_triangle(Vector2(center_x - indicator_size, center_y), 
-                         Vector2(center_x + indicator_size, center_y - indicator_size), 
-                         Vector2(center_x + indicator_size, center_y + indicator_size), WHITE)
+        center_x = int(self.rect.x + self.rect.width / 2)
+        center_y = int(self.rect.y + self.rect.height / 2)
+        # indicator_size = self.rect.width * 0.2
+
+        match self.state:
+            case CyclopsState.IDLE:
+                draw_text("I", center_x, center_y, 10, BLACK)
+            case CyclopsState.ATTACKING:
+                draw_text("A", center_x, center_y, 10, BLACK)
 

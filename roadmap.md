@@ -69,7 +69,7 @@ Next/TO DO:
 * Add barrel/vase with hay for player to break
 * Add cyclops
 
-### Date: 04/20/26
+### Date: 04/21/26
 **Add empty and full vases**
 ......
 **Implementation**
@@ -81,7 +81,7 @@ Next/TO DO:
 * Add "attention box" for player for when enemy notices it
 * Add cyclops
 
-### Date: 04/20/26
+### Date: 04/21/26
 **Add "attention box" for player for when enemy notices it**
 ......
 **Implementation**
@@ -92,3 +92,16 @@ Next/TO DO:
 Next/TO DO:
 * Add cyclops
 * When collision between attenton box and cyclops, cyclops state switched to "angry"
+
+### Date: 04/21/26
+**Add cyclops with states angry and idle**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add cyclops with states angry and idle**
+.......
+Next/TO DO:
+* Implement health bar component
+* Implement player attack
+* Implement cyclops attack

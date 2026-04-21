@@ -16,7 +16,7 @@ class Tiles(enumerate):
     AIR = 0
     SOLID = 1
     SHEEP = 2 
-    ENEMY = 3
+    CYCLOPS = 3
     HAY = 4 
     BOUNDARY = 5
     VASE_EMPTY = 6
@@ -26,3 +26,8 @@ class Tiles(enumerate):
 class Axis(enumerate):
     X_AXIS = 0
     Y_AXIS = 1
+
+class CyclopsState(enumerate):
+    IDLE = 0
+    ANGRY = 1
+    ATTACK = 2

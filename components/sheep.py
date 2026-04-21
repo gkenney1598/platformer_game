@@ -10,7 +10,7 @@ class Sheep:
         self.vx = ENEMY_SPEED # Start moving right
         self.vy = 0.0 
         self.is_grounded = True
-        self.is_friendly = False
+        self.is_friendly = False #TODO: add sheep states
         self.hay = 0
         self.is_held = False
         self.walking_y = y

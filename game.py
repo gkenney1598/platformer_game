@@ -7,7 +7,7 @@ from enums import PlayerState
 
 class Game:
     def __init__(self):
-        self.game_level, self.sheep, self.enemies, self.hay, self.vase = Level.parse_level(LEVEL)
+        self.game_level, self.sheep, self.cyclops, self.hay, self.vase, = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
@@ -34,8 +34,9 @@ class Game:
             self.player.update(delta_time, self.game_level)
             
             # Update Enemies
-            # for enemy in self.enemies:
-            #     enemy.update(delta_time, self.game_level)
+            for cyclops in self.cyclops:
+                cyclops.update(delta_time, self.game_level)
+
             for sheep in self.sheep:
                 sheep.update(delta_time, self.game_level)
 
@@ -84,8 +85,8 @@ class Game:
             hay.draw()
             
         # 3. Draw Enemies
-        # for enemy in self.enemies:
-        #     enemy.draw()
+        for cyclops in self.cyclops:
+            cyclops.draw()
 
         for sheep in self.sheep:
             sheep.draw()
@@ -103,7 +104,7 @@ class Game:
         score_text = f"Score: {self.score}".encode('utf-8')
         draw_text(score_text, SCREEN_WIDTH - measure_text(score_text, 20) - 10, 10, 20, BLACK)
         
-        debug_text = f"Grounded: {self.player.is_grounded} | Enemies: {len(self.enemies)}".encode('utf-8')
+        debug_text = f"Grounded: {self.player.is_grounded}".encode('utf-8')
         draw_text(debug_text, 10, 10, 20, BLACK) 
 
         hay_text = f"Number of hay: {self.player.hay}"
