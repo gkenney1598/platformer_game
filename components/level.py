@@ -1,9 +1,10 @@
 from pyray import *
 from settings import *
 from enums import Tiles
-from components.enemy import Enemy
+from platformer_game.components.cyclops import Enemy
 from components.hay import Hay
 from components.sheep import Sheep
+from components.vase import Vase
 
 class Level:
     def parse_level(level):
@@ -14,6 +15,7 @@ class Level:
         sheep = []
         enemies = []
         hay = []
+        vase = []
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
         new_level = [row[:] for row in level] 
         
@@ -43,9 +45,17 @@ class Level:
                 elif new_level[r][c] == Tiles.BOUNDARY:
                     new_level[r][c] = Tiles.BOUNDARY
 
+                elif new_level[r][c] == Tiles.VASE_EMPTY:
+                    vase.append(Vase(x, y, False))
+                    new_level[r][c] = Tiles.AIR
+
+                elif new_level[r][c] == Tiles.VASE_FULL:
+                    vase.append(Vase(x, y, True))
+                    new_level[r][c] = Tiles.AIR
+
 
                     
-        return new_level, sheep, enemies, hay
+        return new_level, sheep, enemies, hay, vase
     
     def draw_level(level):
         """Draws the solid tiles of the level map."""

@@ -7,7 +7,7 @@ from enums import PlayerState
 
 class Game:
     def __init__(self):
-        self.game_level, self.sheep, self.enemies, self.hay = Level.parse_level(LEVEL)
+        self.game_level, self.sheep, self.enemies, self.hay, self.vase = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
@@ -67,23 +67,10 @@ class Game:
                 self.sheep[self.held_sheep_index].is_held = False
                 self.player.state = PlayerState.IDLE
 
-            
-            # Check for enemy collision (Stomp/Death/Reset)
-            # hit_type, enemy_index = self.player.check_enemy_collision(self.enemies)
-
-            # if hit_type == "STOMP":
-            #     # Stomp mechanic: Remove enemy, score, and bounce
-            #     self.enemies.pop(enemy_index)
-            #     self.score += 100 
-            #     self.player.vy = STOMP_BOUNCE # Player bounces up
-                
-            # elif hit_type == "LETHAL":
-            #     # Death/Reset mechanic: Penalty and restart
-            #     self.player.reset()
-            #     self.score -= 50 
-            #     if self.score < 0: self.score = 0
-
-            # self.coin.update
+            collided_vase = self.player.check_vase_collision(self.vase)
+            if collided_vase >= 0 and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT) and self.vase[collided_vase].full:
+                self.vase[collided_vase].full = False
+                self.player.hay += 3
 
     def draw(self):
         # Start the 2D camera mode
@@ -102,6 +89,9 @@ class Game:
 
         for sheep in self.sheep:
             sheep.draw()
+
+        for vase in self.vase:
+            vase.draw()
 
         # 4. Draw Player 
         self.player.draw()

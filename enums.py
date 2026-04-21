@@ -19,6 +19,9 @@ class Tiles(enumerate):
     ENEMY = 3
     HAY = 4 
     BOUNDARY = 5
+    VASE_EMPTY = 6
+    VASE_FULL = 7
+    
 
 class Axis(enumerate):
     X_AXIS = 0

@@ -10,6 +10,7 @@ class Player:
         self.start_y = y
 
         self.rect = Rectangle(x, y, PLAYER_WIDTH, PLAYER_WIDTH)
+        self.attention_box = Rectangle(x - 100, y - 100, PLAYER_WIDTH + 200, PLAYER_WIDTH + 200)
         
         # Physics
         self.vx = 0.0
@@ -21,6 +22,8 @@ class Player:
         self.state = PlayerState.IDLE
         self.held_object = None
         self.can_transform = False
+
+        self.health = 100
 
     def update(self, delta_time, level, held_object = None):
         # 1. Handle Input (Horizontal Movement)
@@ -135,6 +138,13 @@ class Player:
                               
         return -1
     
+    def check_vase_collision(self, vase):
+        for i, vase in enumerate(vase):
+            if check_collision_recs(self.rect, vase.rect):
+                return i 
+            
+        return -1
+    
     # def check_enemy_collision(self, enemies):
     #     """Checks for collision with enemies and determines outcome (stomp or death).
     #     Returns (hit_type, enemy_index) or (None, -1).
@@ -180,6 +190,7 @@ class Player:
 
     def draw(self):
         """Draws the player at their world coordinates."""
+        draw_rectangle_rec(self.attention_box, BLUE)
         match self.state:
             case PlayerState.SHEEP_IDLE:
                 draw_rectangle_rec(self.rect, WHITE) 
