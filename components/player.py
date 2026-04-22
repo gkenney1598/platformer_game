@@ -152,6 +152,13 @@ class Player:
             
         return -1
     
+    def check_enemy_collision(self, enemies):
+        for i, enemy in enumerate(enemies):
+            if check_collision_recs(self.rect, enemy.rect):
+                return i
+            
+        return -1
+    
     # def check_enemy_collision(self, enemies):
     #     """Checks for collision with enemies and determines outcome (stomp or death).
     #     Returns (hit_type, enemy_index) or (None, -1).
@@ -200,11 +207,9 @@ class Player:
         match self.state:
             case PlayerState.SHEEP_IDLE:
                 draw_rectangle_rec(self.rect, WHITE) 
+            case PlayerState.ATTACKING:
+                draw_rectangle_rec(self.rect, RED)
             case _:
                 draw_rectangle_rec(self.rect, BLUE) 
-                if self.is_grounded:
-                    draw_rectangle_lines_ex(self.rect, 2, WHITE)
-                else:
-                    draw_rectangle_lines_ex(self.rect, 2, GRAY)
         
         self.health_bar.draw()

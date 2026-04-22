@@ -118,3 +118,15 @@ Next/TO DO:
 * Implement player attack
 * Implement cyclops attack
 * Add player sprite and animation
+
+### Date: 04/22/26
+**Add player attack**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add player attack**
+.......
+Next/TO DO:
+* Implement cyclops attack with cyclops following player
+* Add player sprite and animation

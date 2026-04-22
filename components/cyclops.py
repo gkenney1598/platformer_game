@@ -10,7 +10,7 @@ class Cyclops:
         self.width = TILE_SIZE * 0.7
         self.height = TILE_SIZE * 0.7
         self.rect = Rectangle(x, y, self.width, self.height)
-        self.state = CyclopsState.IDLE
+        self.state = CyclopsState.WALKING
         
         # Physics/Movement
         self.vx = ENEMY_SPEED # Start moving right
@@ -26,23 +26,29 @@ class Cyclops:
 
     def update(self, delta_time, level):
         # 1. Apply Gravity
-        if self.is_grounded:
-            self.vy = 0.0
-        self.vy += GRAVITY_ENTITY * delta_time
-        self.is_grounded = False 
 
-        # 2. Apply Movement 
+        match self.state:
+            case CyclopsState.WALKING:
+                if self.is_grounded:
+                    self.vy = 0.0
+                self.vy += GRAVITY_ENTITY * delta_time
+                self.is_grounded = False 
 
-        # Apply X movement
-        self.rect.x += self.vx * delta_time
-        self.handle_tile_collision(level, 'X')
-        
-        # Apply Y movement
-        self.rect.y += self.vy * delta_time
-        self.handle_tile_collision(level, 'Y')
+                self.rect.x += self.vx * delta_time
+                self.handle_tile_collision(level, 'X')
+                
+                self.rect.y += self.vy * delta_time
+                self.handle_tile_collision(level, 'Y')
+            case CyclopsState.DEAD:
+                self.vx = 0
+                self.vy = 0
+            
+
         self.health_bar.update(self.rect.x, self.rect.y - 20)
+        self.health_bar.update_health(self.health)
 
-        self.health_bar.update_health(50)
+        if self.health <= 0:
+            self.state = CyclopsState.DEAD
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
@@ -83,20 +89,24 @@ class Cyclops:
                         enemy_rect = self.get_rect() # Update rect after resolution
 
     def draw(self):
-        """Draws the enemy as a red rectangle with a directional indicator."""
-        draw_rectangle(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), RED)
-        draw_rectangle_lines(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), BLACK)
 
-        # Draw a small indicator for direction
+        # Draw a small indicator for state for debugging
         center_x = int(self.rect.x + self.rect.width / 2)
         center_y = int(self.rect.y + self.rect.height / 2)
-        # indicator_size = self.rect.width * 0.2
 
-        self.health_bar.draw()
 
         match self.state:
-            case CyclopsState.IDLE:
-                draw_text("I", center_x, center_y, 10, BLACK)
-            case CyclopsState.ATTACKING:
+            case CyclopsState.WALKING:
+                draw_rectangle(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), RED)
+                draw_rectangle_lines(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), BLACK)
+                self.health_bar.draw()
+                draw_text("W", center_x, center_y, 10, BLACK)
+            case CyclopsState.ANGRY:
                 draw_text("A", center_x, center_y, 10, BLACK)
+                draw_rectangle(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), RED)
+                draw_rectangle_lines(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), BLACK)
+                self.health_bar.draw()
+            case CyclopsState.DEAD:
+                pass
+
 

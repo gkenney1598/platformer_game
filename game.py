@@ -62,7 +62,6 @@ class Game:
 
         
             if is_key_pressed(KeyboardKey.KEY_G) and self.player.state == PlayerState.HOLDING_SHEEP:
-                # self.sheep[collided_sheep].rect.y = self.sheep[collided_sheep].walking_y
                 self.sheep[self.held_sheep_index].is_grounded = False
                 
                 self.sheep[self.held_sheep_index].is_held = False
@@ -73,28 +72,32 @@ class Game:
                 self.vase[collided_vase].full = False
                 self.player.hay += 3
 
+            collided_enemy = self.player.check_enemy_collision(self.cyclops)
+            if collided_enemy >= 0 and is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
+                self.player.state = PlayerState.ATTACKING
+            elif is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
+                self.player.state = PlayerState.IDLE
+                if collided_enemy != -1:
+                    self.cyclops[collided_enemy].health -= 25
+                    print(self.cyclops[collided_enemy].health)
+
     def draw(self):
-        # Start the 2D camera mode
         begin_mode_2d(self.camera)
         
-        # 1. Draw the Level
         Level.draw_level(self.game_level)
 
-        # 2. Draw Collectibles
         for hay in self.hay:
             hay.draw()
+        
+        for vase in self.vase:
+            vase.draw()
             
-        # 3. Draw Enemies
         for cyclops in self.cyclops:
             cyclops.draw()
 
         for sheep in self.sheep:
             sheep.draw()
 
-        for vase in self.vase:
-            vase.draw()
-
-        # 4. Draw Player 
         self.player.draw()
         
         # End the 2D camera mode
@@ -112,7 +115,6 @@ class Game:
 
     def shutdown(self):
         pass
-        # self.coin.shutdown
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

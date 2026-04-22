@@ -3,7 +3,7 @@ from pyray import *
 class HealthBar:
     def __init__(self, max_health, x, y, width, height):
         self.max_health = max_health
-        self.current_health = 50
+        self.current_health = max_health
         self.bar_width = width
         self.bar_height = height # Top-left corner of the bar
         self.bar_rect = Rectangle(x, y, self.bar_width, self.bar_height)
@@ -17,14 +17,11 @@ class HealthBar:
 
     def update_health(self, new_health):
         self.current_health = max(0, min(new_health, self.max_health)) 
-        self.health_rect.width = 10 #(self.current_health / self.max_health) * self.bar_width 
+        self.health_rect.width = (self.current_health / self.max_health) * self.bar_width 
 
     def draw(self):
         # Draw background (gray)
         draw_rectangle_rec(self.bar_rect, GRAY)
-        
-        # Calculate health percentage
-        health_percentage = self.current_health / self.max_health
         
         # Draw foreground (green)
         draw_rectangle_rec(self.health_rect, GREEN)

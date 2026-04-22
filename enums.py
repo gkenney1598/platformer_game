@@ -28,6 +28,7 @@ class Axis(enumerate):
     Y_AXIS = 1
 
 class CyclopsState(enumerate):
-    IDLE = 0
+    WALKING = 0
     ANGRY = 1
     ATTACK = 2
+    DEAD = 3
