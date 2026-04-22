@@ -3,7 +3,8 @@ from components.level import Level
 from components.player import Player
 from components.coin import Coin
 from settings import *
-from enums import PlayerState
+from enums import PlayerState, CyclopsState
+from components.cyclops import Cyclops
 
 class Game:
     def __init__(self):
@@ -35,14 +36,15 @@ class Game:
             
             # Update Enemies
             for cyclops in self.cyclops:
-                cyclops.update(delta_time, self.game_level)
+                cyclops.update(delta_time, self.game_level, self.player.rect)
+                cyclops.check_player_nearby(self.player.attention_box)
 
             for sheep in self.sheep:
                 sheep.update(delta_time, self.game_level)
 
             self.camera_update(self.camera, self.player, WORLD_WIDTH, WORLD_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-            #hay collection
+            #TODO: all this collision stuff to seperate functions
             collected_indices = self.player.check_collection(self.hay)
             if collected_indices:
                 for index in sorted(collected_indices, reverse=True):
@@ -73,13 +75,14 @@ class Game:
                 self.player.hay += 3
 
             collided_enemy = self.player.check_enemy_collision(self.cyclops)
-            if collided_enemy >= 0 and is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
-                self.player.state = PlayerState.ATTACKING
-            elif is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
+            if collided_enemy != -1 and self.cyclops[collided_enemy].state != CyclopsState.DEAD:
+                if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
+                    self.player.state = PlayerState.ATTACKING
+                elif is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
+                        self.cyclops[collided_enemy].health -= 25
+                self.player.health -= self.cyclops[collided_enemy].attack(delta_time)
+            else:
                 self.player.state = PlayerState.IDLE
-                if collided_enemy != -1:
-                    self.cyclops[collided_enemy].health -= 25
-                    print(self.cyclops[collided_enemy].health)
 
     def draw(self):
         begin_mode_2d(self.camera)

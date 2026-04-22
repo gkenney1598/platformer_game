@@ -20,13 +20,17 @@ class Cyclops:
         self.health = 100
         self.health_bar = HealthBar(self.health, x, y-10, self.width, 5)
 
+        self.angry_time = 2
+        self.angry_timer = 0
+
+        self.attack_cooldown = 0.75
+        self.attack_timer = 0
+
     def get_rect(self):
         """Returns the enemy's collision bounding box."""
         return self.rect
 
-    def update(self, delta_time, level):
-        # 1. Apply Gravity
-
+    def update(self, delta_time, level, player_rect):
         match self.state:
             case CyclopsState.WALKING:
                 if self.is_grounded:
@@ -34,21 +38,38 @@ class Cyclops:
                 self.vy += GRAVITY_ENTITY * delta_time
                 self.is_grounded = False 
 
-                self.rect.x += self.vx * delta_time
-                self.handle_tile_collision(level, 'X')
-                
-                self.rect.y += self.vy * delta_time
-                self.handle_tile_collision(level, 'Y')
             case CyclopsState.DEAD:
                 self.vx = 0
                 self.vy = 0
-            
+            case CyclopsState.ANGRY:
+                if self.is_grounded:
+                    self.vy = 0.0
+                self.vy += GRAVITY_ENTITY * delta_time
+                self.is_grounded = False 
+                self.angry_timer += delta_time
+                if player_rect.x < self.rect.x:
+                    self.vx = -ENEMY_SPEED
+                else:
+                    self.vx = ENEMY_SPEED
+                    
+        self.rect.x += self.vx * delta_time
+        self.handle_tile_collision(level, 'X')
+        
+        self.rect.y += self.vy * delta_time
+        self.handle_tile_collision(level, 'Y')
 
         self.health_bar.update(self.rect.x, self.rect.y - 20)
         self.health_bar.update_health(self.health)
 
         if self.health <= 0:
             self.state = CyclopsState.DEAD
+
+    def attack(self, delta_time):
+        if self.attack_timer >= self.attack_cooldown:
+            self.attack_timer = 0
+            return 10
+        self.attack_timer += delta_time
+        return 0
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
@@ -67,26 +88,37 @@ class Cyclops:
                     continue
                 
                 if level[row][col] == Tiles.SOLID or level[row][col] == Tiles.BOUNDARY:
+
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(enemy_rect, tile_rect):
-                        
-                        if axis == 'X':
-                            # Reverses direction on horizontal collision
-                            if self.vx > 0:
-                                self.rect.x = tile_rect[0] - self.rect.width
-                            elif self.vx < 0:
-                                self.rect.x = tile_rect[0] + TILE_SIZE
-                            self.vx *= -1 # Reverse direction
-                            
-                        elif axis == 'Y':
-                            if self.vy >= 0: # Hitting Ground
-                                self.rect.y = tile_rect[1] - self.rect.height
-                                self.is_grounded = True 
+                        if (self.state == CyclopsState.ANGRY and level[row][col] == Tiles.SOLID) or self.state != CyclopsState.ANGRY:                        
+                            if axis == 'X':
+                                    # Reverses direction on horizontal collision
+                                    if self.vx > 0:
+                                        self.rect.x = tile_rect[0] - self.rect.width
+                                    elif self.vx < 0:
+                                        self.rect.x = tile_rect[0] + TILE_SIZE
+                                    self.vx *= -1 # Reverse direction
                                 
-                            self.vy = 0.0 
-                            
-                        enemy_rect = self.get_rect() # Update rect after resolution
+                            elif axis == 'Y':
+                                if self.vy >= 0: # Hitting Ground
+                                    self.rect.y = tile_rect[1] - self.rect.height
+                                    self.is_grounded = True 
+                                    
+                                self.vy = 0.0 
+                                
+                            enemy_rect = self.get_rect() # Update rect after resolution
+
+    def check_player_nearby(self, player_attention_box):
+        match self.state:
+            case CyclopsState.WALKING:
+                if check_collision_recs(self.rect, player_attention_box):
+                    self.state = CyclopsState.ANGRY
+            case CyclopsState.ANGRY:
+                if not check_collision_recs(self.rect, player_attention_box) and self.angry_timer >= self.angry_time:
+                    self.state = CyclopsState.WALKING
+                    self.angry_timer = 0
 
     def draw(self):
 

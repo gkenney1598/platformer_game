@@ -130,3 +130,19 @@ Next/TO DO:
 Next/TO DO:
 * Implement cyclops attack with cyclops following player
 * Add player sprite and animation
+
+### Date: 04/22/26
+**Cyclops chases and attacks player**
+......
+**Implementation**
+*Technical Plan/Credit*: https://www.youtube.com/watch?v=y_dg8Awrl94 basic enemy AI
+*Content Credit*: N/A
+**feat: add cyclops attack**
+.......
+Next/TO DO:
+* Add player sprite and animation
+* Other sprites and background
+* Add end of first level logic
+* Major code refactor
+* Add game states
+

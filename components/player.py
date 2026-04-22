@@ -64,7 +64,7 @@ class Player:
         self.attention_box.y = self.rect.y - 10
         self.handle_tile_collision(level, 'Y')
         self.health_bar.update(self.rect.x, self.rect.y - 20)
-        self.health_bar.update_health(50)
+        self.health_bar.update_health(self.health)
         
         # --- Safety Clamp to World Bounds ---
         self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
