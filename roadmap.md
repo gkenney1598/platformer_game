@@ -105,3 +105,16 @@ Next/TO DO:
 * Implement health bar component
 * Implement player attack
 * Implement cyclops attack
+
+### Date: 04/22/26
+**Add health bar**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add health bar above player and cyclops**
+.......
+Next/TO DO:
+* Implement player attack
+* Implement cyclops attack
+* Add player sprite and animation

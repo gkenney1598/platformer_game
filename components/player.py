@@ -1,8 +1,10 @@
 from pyray import *
 from settings import *
 from enums import Tiles, PlayerState
+from components.healthbar import HealthBar
 
-#TO-DO: refactor previous code to use PlayerState
+#TODO: refactor previous code to use PlayerState
+#TODO: debug being able to tranform into sheep while holding a sheep
 class Player:
     def __init__(self, x, y):
         # Store starting position for reset
@@ -24,6 +26,7 @@ class Player:
         self.can_transform = False
 
         self.health = 100
+        self.health_bar = HealthBar(self.health, x, y-10, PLAYER_WIDTH, 5)
 
     def update(self, delta_time, level, held_object = None):
         # 1. Handle Input (Horizontal Movement)
@@ -60,6 +63,8 @@ class Player:
         self.rect.y += self.vy * delta_time
         self.attention_box.y = self.rect.y - 10
         self.handle_tile_collision(level, 'Y')
+        self.health_bar.update(self.rect.x, self.rect.y - 20)
+        self.health_bar.update_health(50)
         
         # --- Safety Clamp to World Bounds ---
         self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
@@ -201,3 +206,5 @@ class Player:
                     draw_rectangle_lines_ex(self.rect, 2, WHITE)
                 else:
                     draw_rectangle_lines_ex(self.rect, 2, GRAY)
+        
+        self.health_bar.draw()

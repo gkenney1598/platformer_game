@@ -1,6 +1,7 @@
 from pyray import *
 from settings import *
 from enums import Tiles, CyclopsState
+from components.healthbar import HealthBar
 
 class Cyclops:
     def __init__(self, x, y):
@@ -15,6 +16,9 @@ class Cyclops:
         self.vx = ENEMY_SPEED # Start moving right
         self.vy = 0.0 
         self.is_grounded = False
+
+        self.health = 100
+        self.health_bar = HealthBar(self.health, x, y-10, self.width, 5)
 
     def get_rect(self):
         """Returns the enemy's collision bounding box."""
@@ -36,6 +40,9 @@ class Cyclops:
         # Apply Y movement
         self.rect.y += self.vy * delta_time
         self.handle_tile_collision(level, 'Y')
+        self.health_bar.update(self.rect.x, self.rect.y - 20)
+
+        self.health_bar.update_health(50)
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
@@ -84,6 +91,8 @@ class Cyclops:
         center_x = int(self.rect.x + self.rect.width / 2)
         center_y = int(self.rect.y + self.rect.height / 2)
         # indicator_size = self.rect.width * 0.2
+
+        self.health_bar.draw()
 
         match self.state:
             case CyclopsState.IDLE:
