@@ -1,7 +1,6 @@
 from pyray import *
 from components.level import Level
 from components.player import Player
-from components.coin import Coin
 from settings import *
 from enums import PlayerState, CyclopsState
 from components.cyclops import Cyclops
@@ -19,13 +18,12 @@ class Game:
         self.camera.offset = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) 
         self.camera.rotation = 0.0
         self.camera.zoom = 1.0
-        # self.coin = Coin()
+
 
         self.held_sheep_index = None
 
     def startup(self):
-        pass
-        # self.coin.startup()
+        self.player.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -58,16 +56,17 @@ class Game:
                     self.player.hay -= 1
                     self.player.can_transform = True
             if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheep[collided_sheep].is_friendly:
-                self.player.state = PlayerState.HOLDING_SHEEP
+                self.player.is_holding = True
                 self.held_sheep_index = collided_sheep
                 self.player.hold_object(self.sheep[collided_sheep])
 
         
-            if is_key_pressed(KeyboardKey.KEY_G) and self.player.state == PlayerState.HOLDING_SHEEP:
+            if is_key_pressed(KeyboardKey.KEY_G) and self.player.is_holding == True:
                 self.sheep[self.held_sheep_index].is_grounded = False
                 
                 self.sheep[self.held_sheep_index].is_held = False
-                self.player.state = PlayerState.IDLE
+                self.player.is_holding = False
+                # self.player.state = PlayerState.IDLE
 
             collided_vase = self.player.check_vase_collision(self.vase)
             if collided_vase >= 0 and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT) and self.vase[collided_vase].full:
@@ -75,14 +74,14 @@ class Game:
                 self.player.hay += 3
 
             collided_enemy = self.player.check_enemy_collision(self.cyclops)
-            if collided_enemy != -1 and self.cyclops[collided_enemy].state != CyclopsState.DEAD:
-                if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
+            if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
                     self.player.state = PlayerState.ATTACKING
-                elif is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
+            if collided_enemy != -1 and self.cyclops[collided_enemy].state != CyclopsState.DEAD:
+                if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
                         self.cyclops[collided_enemy].health -= 25
                 self.player.health -= self.cyclops[collided_enemy].attack(delta_time)
-            else:
-                self.player.state = PlayerState.IDLE
+            # else:
+            #     self.player.state = PlayerState.IDLE
 
     def draw(self):
         begin_mode_2d(self.camera)
@@ -117,7 +116,7 @@ class Game:
         draw_text(hay_text, 10, 40, 20, BLACK)
 
     def shutdown(self):
-        pass
+        self.player.shutdown()
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

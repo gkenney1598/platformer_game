@@ -1,17 +1,15 @@
+from enum import IntEnum
 class PlayerState(enumerate):
     WALKING = 0
-    HOLDING_SHEEP = 1
-    HOLDING_CREW = 2
-    ATTACKING = 3
-    SNEAK = 4
-    SHEEP = 5
-    POWER_ATTACK = 6 
-    IDLE = 7
-    JUMPING = 8
-    SHEEP_IDLE = 9
-    SHEEP_WALKING = 10
-    SHEEP_SNEAK = 11
-    SHEEP_ATTACKING = 12
+    ATTACKING = 1
+    SHEEP = 2
+    POWER_ATTACK = 3
+    IDLE = 4
+    JUMPING = 5
+    SHEEP_IDLE =6
+    SHEEP_WALKING = 7
+    SHEEP_SNEAK = 8
+    DEAD = 9
 class Tiles(enumerate):
     AIR = 0
     SOLID = 1
@@ -32,3 +30,11 @@ class CyclopsState(enumerate):
     ANGRY = 1
     ATTACK = 2
     DEAD = 3
+
+class AnimationType(IntEnum):
+    REPEATING = 1
+    ONESHOT = 2
+
+class Direction(IntEnum):
+    LEFT = -1
+    RIGHT = 1

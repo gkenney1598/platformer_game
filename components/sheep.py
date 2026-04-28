@@ -37,8 +37,8 @@ class Sheep:
             self.is_friendly = True
 
     def move_with_player(self, x, y):
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.x = x + 20
+        self.rect.y = y + 10
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""

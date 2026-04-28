@@ -2,14 +2,7 @@ from pyray import *
 from settings import *
 
 from enum import IntEnum
-
-class AnimationType(IntEnum):
-    REPEATING = 1
-    ONESHOT = 2
-
-class Direction(IntEnum):
-    LEFT = -1
-    RIGHT = 1
+from enums import AnimationType
 
 class Animation:
     def __init__(self, first, last, cur, step, duration, duration_left, anim_type, row, sprites_in_row):
@@ -42,7 +35,6 @@ class Animation:
     def frame(self, tile_size, row):
         x = (self.cur % self.sprites_in_row) * tile_size
         y =  tile_size * self.row
-
         return Rectangle(x, y, tile_size, tile_size)
 
     def reset(self): # ADDED
