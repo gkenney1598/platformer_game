@@ -24,6 +24,8 @@ class Game:
 
     def startup(self):
         self.player.startup()
+        for vase in self.vase:
+            vase.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -117,6 +119,8 @@ class Game:
 
     def shutdown(self):
         self.player.shutdown()
+        for vase in self.vase:
+            vase.shutdown() 
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

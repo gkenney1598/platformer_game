@@ -146,13 +146,28 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
-### Date: 04/22/26
+### Date: 04/27/26
 **Odysseus Sprite**
 ......
 **Implementation**
 *Technical Plan/Credit*: N/A
 *Content Credit*: https://sorthen.itch.io/a-heightened-sense-of-things 
 **feat: add odysseus sprites**
+.......
+Next/TO DO:
+* Other sprites and background
+* Add sheep special abilities
+* Add end of first level logic
+* Major code refactor
+* Add game states
+
+### Date: 04/27/26
+**Vase Sprite**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: myself
+**feat: add vase spririt**
 .......
 Next/TO DO:
 * Other sprites and background
