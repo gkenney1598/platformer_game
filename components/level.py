@@ -5,8 +5,10 @@ from components.cyclops import Cyclops
 from components.hay import Hay
 from components.sheep import Sheep
 from components.vase import Vase
+from components.blocks import Grass, Pillar
 
 class Level:
+
     def parse_level(level):
         """
         Parses the level map, extracts all dynamic entities (coins, enemies), 
@@ -16,6 +18,7 @@ class Level:
         cyclops = []
         hay = []
         vase = []
+        solid = []
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
         new_level = [row[:] for row in level] 
         
@@ -53,9 +56,16 @@ class Level:
                     vase.append(Vase(x, y, True))
                     new_level[r][c] = Tiles.AIR
 
+                elif new_level[r][c] == Tiles.SOLID:
+                    new_level[r][c] = Tiles.SOLID
+                    if r == TILE_ROWS - 1:           
+                        solid.append(Grass(x, y))
+                    else:
+                        solid.append(Pillar(x, y))
 
-                    
-        return new_level, sheep, cyclops, hay, vase
+
+
+        return new_level, sheep, cyclops, hay, vase, solid
     
     def draw_level(level):
         """Draws the solid tiles of the level map."""
@@ -68,3 +78,4 @@ class Level:
                     
                     draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
                     draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
+    

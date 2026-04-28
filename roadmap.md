@@ -167,7 +167,22 @@ Next/TO DO:
 **Implementation**
 *Technical Plan/Credit*: N/A
 *Content Credit*: myself
-**feat: add vase spririt**
+**feat: add vase sprites**
+.......
+Next/TO DO:
+* Other sprites and background
+* Add sheep special abilities
+* Add end of first level logic
+* Major code refactor
+* Add game states
+
+### Date: 04/28/26
+**Add level sprites**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: https://opengameart.org/content/island-blocs-16x16-tileset and https://purplelady.itch.io/tile-set-grego-greek?download#google_vignette
+**feat: add level sprites**
 .......
 Next/TO DO:
 * Other sprites and background

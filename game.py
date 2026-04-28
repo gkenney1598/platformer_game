@@ -7,7 +7,7 @@ from components.cyclops import Cyclops
 
 class Game:
     def __init__(self):
-        self.game_level, self.sheep, self.cyclops, self.hay, self.vase, = Level.parse_level(LEVEL)
+        self.game_level, self.sheep, self.cyclops, self.hay, self.vase, self.solid = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
@@ -26,6 +26,8 @@ class Game:
         self.player.startup()
         for vase in self.vase:
             vase.startup()
+        for block in self.solid:
+            block.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -88,7 +90,8 @@ class Game:
     def draw(self):
         begin_mode_2d(self.camera)
         
-        Level.draw_level(self.game_level)
+        for block in self.solid:
+            block.draw()
 
         for hay in self.hay:
             hay.draw()
@@ -121,6 +124,8 @@ class Game:
         self.player.shutdown()
         for vase in self.vase:
             vase.shutdown() 
+        for block in self.solid:
+            block.shutdown()
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""
