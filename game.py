@@ -30,6 +30,8 @@ class Game:
             block.startup()
         for sheep in self.sheep:
             sheep.startup()
+        for hay in self.hay:
+            hay.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -130,6 +132,8 @@ class Game:
             block.shutdown()
         for sheep in self.sheep:
             sheep.shutdown()
+        for hay in self.hay:
+            hay.shutdown()
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

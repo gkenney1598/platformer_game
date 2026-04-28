@@ -206,3 +206,18 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/28/26
+**Add hay sprite**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [Hay Sprite](https://www.pixilart.com/art/hay-bale-2fdc22daa72e017?ft=tags&ft_id=)
+**feat: add hay sprite**
+.......
+Next/TO DO:
+* Other sprites and background
+* Add sheep special abilities
+* Add end of first level logic
+* Major code refactor
+* Add game states
+
