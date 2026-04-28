@@ -1,22 +1,34 @@
 from pyray import *
 from settings import *
-from enums import Axis, Tiles
+from enums import Axis, Tiles, AnimationType, Direction
+from utils.anim import Animation
 
 class Sheep:
     def __init__(self, x, y):
-        self.rect = Rectangle(x, y, TILE_SIZE * 0.7, TILE_SIZE * 0.7)
-        
+        self.rect = Rectangle(x, y, TILE_SIZE, TILE_SIZE)
         # Physics/Movement
-        self.vx = ENEMY_SPEED # Start moving right
+        self.vx = get_random_value(25, 50)
         self.vy = 0.0 
         self.is_grounded = True
         self.is_friendly = False #TODO: add sheep states
         self.hay = 0
         self.is_held = False
         self.walking_y = y
+        self.texture = None
+        self.width = None
+        self.height = None
+
+        cur = get_random_value(0, 18)
+        self.idle = Animation(first=0, last=18, cur=cur, 
+                              step=1, duration=0.3, duration_left=0.3, 
+                              anim_type=AnimationType.REPEATING, 
+                              row=1, sprites_in_row=19)
+        self.direction = Direction.RIGHT
     
     def startup(self):
-        pass
+        self.texture = load_texture(str(THIS_DIR) + "\\resources\\sheep.png")
+        self.width = self.texture.width / self.idle.sprites_in_row
+        self.height = self.texture.height / 3
 
     def update(self, delta_time, level):
         # 1. Apply Gravity
@@ -25,8 +37,7 @@ class Sheep:
         self.vy += GRAVITY_ENTITY * delta_time
         self.is_grounded = False 
 
-
-        if not self.is_held:
+        if not self.is_held and (self.idle.cur < 11 or self.idle.cur > 17):
             self.rect.x += self.vx * delta_time
             self.handle_tile_collision(level, Axis.X_AXIS)
             
@@ -35,6 +46,8 @@ class Sheep:
 
         if not self.is_friendly and self.hay >= 1:
             self.is_friendly = True
+
+        self.idle.update(delta_time)
 
     def move_with_player(self, x, y):
         self.rect.x = x + 20
@@ -68,6 +81,7 @@ class Sheep:
                                 elif self.vx < 0:
                                     self.rect.x = tile_rect[0] + TILE_SIZE
                                 self.vx *= -1 # Reverse direction
+                                self.direction = Direction.RIGHT if self.vx > 0 else Direction.LEFT
                             
                             case Axis.Y_AXIS:
                                 if self.vy >= 0: # Hitting Ground
@@ -80,18 +94,10 @@ class Sheep:
     
     def draw(self):
         """Draws the enemy as a red rectangle with a directional indicator."""
-        draw_rectangle_rec(self.rect, RAYWHITE)
-        draw_rectangle_lines_ex(self.rect, 2, BLACK)
+        frame = self.idle.frame(self.width, 1)
+        frame.width *= self.direction
+        draw_texture_pro(self.texture, frame, self.rect, Vector2(0,0), 0, WHITE)
         
-        # Draw a small indicator for direction
-        center_x = int(self.rect.x + self.rect.width / 2)
-        center_y = int(self.rect.y + self.rect.height / 2)
-        # indicator_size = self.rect.width * 0.2
-
-        if self.is_friendly:
-            draw_text("F", center_x, center_y, 10, BLACK)
-        else:
-            draw_text("UF", center_x, center_y, 10, BLACK)
             
     def shutdown(self):
-        pass
+        unload_texture(self.texture)
