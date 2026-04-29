@@ -252,3 +252,18 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/29/26
+**Add sheep/player sprite and ability**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add sheep/player sprite and ability**
+.......
+Next/TO DO:
+* Add indicator for sheep friendly
+* Improve appearance of first level
+* Add end of first level logic
+* Major code refactor
+* Add game states
+

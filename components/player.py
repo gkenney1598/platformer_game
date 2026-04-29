@@ -26,6 +26,7 @@ class Player:
         self.state = PlayerState.IDLE
         self.held_object = None
         self.can_transform = False
+        self.is_sheep = False
 
         self.health = 100
         self.health_bar = HealthBar(self.health, (self.rect.x + self.rect.width) / 4, y, self.rect.width, 5)
@@ -56,6 +57,20 @@ class Player:
                                 anim_type=AnimationType.ONESHOT,
                                 row=20, sprites_in_row=6)
         
+        self.sheep_texture = None
+        self.sheep_idle = Animation(first=0, last=18, cur=0, 
+                              step=1, duration=0.3, duration_left=0.3, 
+                              anim_type=AnimationType.REPEATING, 
+                              row=1, sprites_in_row=19)
+        self.sheep_walk =  Animation(first=0, last=4, cur=0, 
+                              step=1, duration=0.1, duration_left=0.1, 
+                              anim_type=AnimationType.REPEATING, 
+                              row=0, sprites_in_row=5)
+        self.sheep_bleet = Animation(first=0, last=8, cur=0, 
+                              step=1, duration=0.3, duration_left=0.3, 
+                              anim_type=AnimationType.ONESHOT, 
+                              row=2, sprites_in_row=9)
+        
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\odysseus.png")
         self.width = int(self.texture.width) / 13
@@ -64,26 +79,34 @@ class Player:
         self.rect.height = self.height
         self.bounding_box = Rectangle(self.rect.x + 10, self.rect.y, self.width - 40, self.height)
 
+        self.sheep_texture = load_texture(str(THIS_DIR) + "\\resources\sheep.png")
+
     def update(self, delta_time, level, held_object = None):
         self.vx = 0.0
-        if is_key_down(KeyboardKey.KEY_LEFT) or is_key_down(KeyboardKey.KEY_A):
+        if is_key_down(KeyboardKey.KEY_A):
             self.vx = -PLAYER_SPEED
             self.player_direction = Direction.LEFT
-            if self.state != PlayerState.JUMPING:
+            if self.is_sheep:
+                self.state = PlayerState.SHEEP_WALKING
+            elif self.state != PlayerState.JUMPING:
                 self.state = PlayerState.WALKING
-        if is_key_down(KeyboardKey.KEY_RIGHT) or is_key_down(KeyboardKey.KEY_D):
+        if is_key_down(KeyboardKey.KEY_D):
             self.vx = PLAYER_SPEED
             self.player_direction = Direction.RIGHT
-            if self.state != PlayerState.JUMPING:
+            if self.is_sheep:
+                self.state = PlayerState.SHEEP_WALKING
+            elif self.state != PlayerState.JUMPING:
                 self.state = PlayerState.WALKING
-        if is_key_released(KeyboardKey.KEY_LEFT) or is_key_released(KeyboardKey.KEY_A) or is_key_released(KeyboardKey.KEY_RIGHT) or is_key_released(KeyboardKey.KEY_D):
-            self.state = PlayerState.IDLE
+        if is_key_released(KeyboardKey.KEY_A) or is_key_released(KeyboardKey.KEY_D):
+            if self.is_sheep:
+                self.state = PlayerState.SHEEP_IDLE
+            else:
+                self.state = PlayerState.IDLE
         
-
         if self.is_grounded:
             self.vy = 0.0
             
-        if (is_key_pressed(KeyboardKey.KEY_SPACE) or is_key_pressed(KeyboardKey.KEY_UP)) and self.is_grounded:
+        if is_key_pressed(KeyboardKey.KEY_SPACE) and self.is_grounded:
             self.vy = JUMP_VELOCITY
             self.state = PlayerState.JUMPING
 
@@ -110,8 +133,10 @@ class Player:
         self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
 
         if is_key_pressed(KeyboardKey.KEY_T) and self.can_transform:
+            self.is_sheep = True
             self.state = PlayerState.SHEEP_IDLE
         if is_key_pressed(KeyboardKey.KEY_Y):
+            self.is_sheep = False
             self.state = PlayerState.IDLE
 
         if self.is_holding:
@@ -121,6 +146,15 @@ class Player:
             self.state = PlayerState.DEAD
         
         match self.state:
+            case PlayerState.SHEEP_IDLE:
+                self.sheep_idle.update(delta_time)
+            case PlayerState.SHEEP_WALKING:
+                self.sheep_walk.update(delta_time)
+            case PlayerState.SHEEP_BLEET:
+                self.sheep_bleet.update(delta_time)
+                if self.sheep_bleet.done:
+                    self.state = PlayerState.IDLE
+                    self.sheep_bleet.reset()
             case PlayerState.IDLE:
                 self.idle.update(delta_time)
             case PlayerState.JUMPING:
@@ -136,7 +170,7 @@ class Player:
                 self.dead.update(delta_time)
                 if self.dead.cur == self.dead.last:
                     self.rect.y += 10
-        
+            
     def handle_tile_collision(self, level, axis):
         """Performs AABB collision checks against solid tiles and resolves the collision."""
         player_rect = self.bounding_box
@@ -264,15 +298,21 @@ class Player:
         if self.is_holding:
             held_object.is_held = True
             self.held_object = held_object
-                
-                # held_object.rect.x = self.rect.x
-                # held_object.rect.y = self.rect.y - held_object.rect.height
 
     def draw(self):
-        """Draws the player at their world coordinates."""
         match self.state:
             case PlayerState.SHEEP_IDLE:
-                draw_rectangle_rec(self.rect, WHITE) 
+                frame = self.sheep_idle.frame(self.width, 8)
+                frame.width *= self.player_direction
+                draw_texture_pro(self.sheep_texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+            case PlayerState.SHEEP_WALKING:
+                frame = self.sheep_walk.frame(self.width, 8)
+                frame.width *= self.player_direction
+                draw_texture_pro(self.sheep_texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+            case PlayerState.SHEEP_BLEET:
+                frame = self.sheep_bleet.frame(self.width, 8)
+                frame.width *= self.player_direction
+                draw_texture_pro(self.sheep_texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
             case PlayerState.ATTACKING:
                 frame = self.attack.frame(self.width, 8)
                 frame.width *= self.player_direction

@@ -40,51 +40,55 @@ class Game:
             # Update Enemies
             for cyclops in self.cyclopses.collection:
                 cyclops.update(delta_time, self.game_level, self.player.rect)
-                cyclops.check_player_nearby(self.player.attention_box)
+                if not self.player.is_sheep:
+                    cyclops.check_player_nearby(self.player.attention_box)
 
             for sheep in self.sheeps.collection:
                 sheep.update(delta_time, self.game_level)
 
             self.camera_update(self.camera, self.player, WORLD_WIDTH, WORLD_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-            #TODO: all this collision stuff to seperate functions
-            collected_indices = self.player.check_collection(self.hay.collection)
-            if collected_indices:
-                for index in sorted(collected_indices, reverse=True):
-                    self.hay.collection.pop(index)
-                    self.player.hay += 1
-            
-            collided_sheep = self.player.check_sheep_collision(self.sheeps.collection)
-            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_F):
-                if self.player.hay > 0:
-                    self.sheeps.collection[collided_sheep].hay += 1
-                    self.player.hay -= 1
-                    self.player.can_transform = True
-            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheeps.collection[collided_sheep].is_friendly:
-                self.player.is_holding = True
-                self.held_sheep_index = collided_sheep
-                self.player.hold_object(self.sheeps.collection[collided_sheep])
-
-        
-            if is_key_pressed(KeyboardKey.KEY_G) and self.player.is_holding == True:
-                self.sheeps.collection[self.held_sheep_index].is_grounded = False
+            if not self.player.is_sheep:
+                collected_indices = self.player.check_collection(self.hay.collection)
+                if collected_indices:
+                    for index in sorted(collected_indices, reverse=True):
+                        self.hay.collection.pop(index)
+                        self.player.hay += 1
                 
-                self.sheeps.collection[self.held_sheep_index].is_held = False
-                self.player.is_holding = False
-                # self.player.state = PlayerState.IDLE
+                collided_sheep = self.player.check_sheep_collision(self.sheeps.collection)
+                if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_F):
+                    if self.player.hay > 0:
+                        self.sheeps.collection[collided_sheep].hay += 1
+                        self.player.hay -= 1
+                        self.player.can_transform = True
+                if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheeps.collection[collided_sheep].is_friendly:
+                    self.player.is_holding = True
+                    self.held_sheep_index = collided_sheep
+                    self.player.hold_object(self.sheeps.collection[collided_sheep])
 
+            
+                if is_key_pressed(KeyboardKey.KEY_G) and self.player.is_holding == True:
+                    self.sheeps.collection[self.held_sheep_index].is_grounded = False
+                    
+                    self.sheeps.collection[self.held_sheep_index].is_held = False
+                    self.player.is_holding = False
+                    # self.player.state = PlayerState.IDLE
+
+                collided_enemy = self.player.check_enemy_collision(self.cyclopses.collection)
+                if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
+                        self.player.state = PlayerState.ATTACKING
+                if collided_enemy != -1 and self.cyclopses.collection[collided_enemy].state != CyclopsState.DEAD:
+                    if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
+                            self.cyclopses.collection[collided_enemy].health -= 25
+                    self.player.health -= self.cyclopses.collection[collided_enemy].attack(delta_time)
+            
             collided_vase = self.player.check_vase_collision(self.vases.collection)
             if collided_vase >= 0 and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT) and self.vases.collection[collided_vase].full:
-                self.vases.collection[collided_vase].full = False
-                self.player.hay += 3
-
-            collided_enemy = self.player.check_enemy_collision(self.cyclopses.collection)
-            if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
-                    self.player.state = PlayerState.ATTACKING
-            if collided_enemy != -1 and self.cyclopses.collection[collided_enemy].state != CyclopsState.DEAD:
-                if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
-                        self.cyclopses.collection[collided_enemy].health -= 25
-                self.player.health -= self.cyclopses.collection[collided_enemy].attack(delta_time)
+                if not self.player.is_sheep:
+                    self.vases.collection[collided_vase].full = False
+                    self.player.hay += 3
+                else:
+                    self.player.state = PlayerState.SHEEP_BLEET
 
     def draw(self):
         begin_mode_2d(self.camera)
