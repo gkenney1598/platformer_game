@@ -41,3 +41,11 @@ class AnimationType(IntEnum):
 class Direction(IntEnum):
     LEFT = -1
     RIGHT = 1
+
+class GameState(enumerate):
+    STARTUP = 0
+    LEVEL_ONE = 1
+    LEVEL_TWO = 2
+    PAUSE = 3
+    GAME_OVER = 4
+    WIN = 5

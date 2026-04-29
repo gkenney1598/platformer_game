@@ -100,24 +100,16 @@ class Game:
         begin_mode_2d(self.camera)
         
         self.blocks.draw()
-        self.hay.draw()       
+        self.hay.draw(self.player.hay)       
         self.vases.draw() 
         self.cyclopses.draw()
         self.sheeps.draw()
         self.player.draw()
         
-        # End the 2D camera mode
         end_mode_2d()
-        
-        # 5. Draw HUD (Drawn on screen, outside of BeginMode2D)
-        score_text = f"Score: {self.score}".encode('utf-8')
-        draw_text(score_text, SCREEN_WIDTH - measure_text(score_text, 20) - 10, 10, 20, BLACK)
-        
-        debug_text = f"Grounded: {self.player.is_grounded}".encode('utf-8')
-        draw_text(debug_text, 10, 10, 20, BLACK) 
 
-        hay_text = f"Number of hay: {self.player.hay}"
-        draw_text(hay_text, 10, 40, 20, BLACK)
+        # hay_text = f"Number of hay: {self.player.hay}"
+        # draw_text(hay_text, 10, 40, 20, BLACK)
 
         
 

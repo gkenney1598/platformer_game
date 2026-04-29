@@ -295,3 +295,16 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/29/26
+**add hay count visual**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add hay count visual**
+.......
+Next/TO DO:
+* Add end of first level logic
+* Major code refactor
+* Add game states
+
