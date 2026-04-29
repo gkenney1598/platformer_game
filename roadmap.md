@@ -267,3 +267,17 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/29/26
+**Add sheep jump when becomes friendly**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add sheep jump when becomes friendly**
+.......
+Next/TO DO:
+* Improve appearance of first level
+* Add end of first level logic
+* Major code refactor
+* Add game states
+

@@ -1,6 +1,6 @@
 from pyray import *
 from settings import *
-from enums import Axis, Tiles, AnimationType, Direction
+from enums import Axis, Tiles, AnimationType, Direction, SheepState
 from utils.anim import Animation
 
 class Sheeps:
@@ -17,9 +17,15 @@ class Sheeps:
     
     def draw(self):
         for sheep in self.collection:
-            frame = sheep.idle.frame(self.width, 1)
-            frame.width *= sheep.direction
-            draw_texture_pro(self.texture, frame, sheep.rect, Vector2(0,0), 0, WHITE)
+            match sheep.state:
+                case SheepState.IDLE:
+                    frame = sheep.idle.frame(self.width, 1)
+                    frame.width *= sheep.direction
+                    draw_texture_pro(self.texture, frame, sheep.rect, Vector2(0,0), 0, WHITE)
+                case SheepState.JUMP:
+                    frame = sheep.jump.frame(self.width, 1)
+                    frame.width *= sheep.direction
+                    draw_texture_pro(self.texture, frame, sheep.rect, Vector2(0,0), 0, WHITE)
                 
     def shutdown(self):
         unload_texture(self.texture)
@@ -41,27 +47,40 @@ class Sheep:
                               step=1, duration=0.3, duration_left=0.3, 
                               anim_type=AnimationType.REPEATING, 
                               row=1, sprites_in_row=19)
+        self.jump = Animation(first=0, last=4, cur=0, 
+                              step=1, duration=0.1, duration_left=0.1, 
+                              anim_type=AnimationType.ONESHOT, 
+                              row=0, sprites_in_row=5)
         self.direction = Direction.RIGHT
+        self.state= SheepState.IDLE
     
 
     def update(self, delta_time, level):
         # 1. Apply Gravity
-        if self.is_grounded:
-            self.vy = 0.0
-        self.vy += GRAVITY_ENTITY * delta_time
-        self.is_grounded = False 
+        match self.state:
+            case SheepState.IDLE:
+                if self.is_grounded:
+                    self.vy = 0.0
+                self.vy += GRAVITY_ENTITY * delta_time
+                self.is_grounded = False 
 
-        if not self.is_held and (self.idle.cur < 11 or self.idle.cur > 17):
-            self.rect.x += self.vx * delta_time
-            self.handle_tile_collision(level, Axis.X_AXIS)
-            
-            self.rect.y += self.vy * delta_time
-            self.handle_tile_collision(level, Axis.Y_AXIS)
+                if not self.is_held and (self.idle.cur < 11 or self.idle.cur > 17):
+                    self.rect.x += self.vx * delta_time
+                    self.handle_tile_collision(level, Axis.X_AXIS)
+                    
+                    self.rect.y += self.vy * delta_time
+                    self.handle_tile_collision(level, Axis.Y_AXIS)
 
-        if not self.is_friendly and self.hay >= 1:
-            self.is_friendly = True
+                if not self.is_friendly and self.hay >= 1:
+                    self.is_friendly = True
+                    self.state = SheepState.JUMP
 
-        self.idle.update(delta_time)
+                self.idle.update(delta_time)
+            case SheepState.JUMP:
+                self.jump.update(delta_time)
+                if self.jump.done:
+                    self.state = SheepState.IDLE
+                    self.jump.reset()
 
     def move_with_player(self, x, y):
         self.rect.x = x + 20
