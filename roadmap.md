@@ -221,3 +221,18 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/28/26
+**refactor code for efficient sprite loading**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**refactor: efficient sprite loading**
+.......
+Next/TO DO:
+* cyclops sprites
+* Add sheep special abilities
+* Add end of first level logic
+* Major code refactor
+* Add game states
+

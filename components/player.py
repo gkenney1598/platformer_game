@@ -198,7 +198,7 @@ class Player:
         
         for i, hay in enumerate(hay):
             
-            if check_collision_recs(player_rect, hay.rect) and is_key_pressed(KeyboardKey.KEY_F):
+            if check_collision_recs(player_rect, hay) and is_key_pressed(KeyboardKey.KEY_F):
                 collected_indices.append(i)
                 
         return collected_indices

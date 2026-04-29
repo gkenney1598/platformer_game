@@ -7,7 +7,7 @@ from components.cyclops import Cyclops
 
 class Game:
     def __init__(self):
-        self.game_level, self.sheep, self.cyclops, self.hay, self.vase, self.solid = Level.parse_level(LEVEL)
+        self.game_level, self.sheeps, self.cyclops, self.hay, self.vases, self.blocks = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
@@ -24,14 +24,10 @@ class Game:
 
     def startup(self):
         self.player.startup()
-        for vase in self.vase:
-            vase.startup()
-        for block in self.solid:
-            block.startup()
-        for sheep in self.sheep:
-            sheep.startup()
-        for hay in self.hay:
-            hay.startup()
+        self.vases.startup()
+        self.blocks.startup()
+        self.sheeps.startup()
+        self.hay.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -45,40 +41,40 @@ class Game:
                 cyclops.update(delta_time, self.game_level, self.player.rect)
                 cyclops.check_player_nearby(self.player.attention_box)
 
-            for sheep in self.sheep:
+            for sheep in self.sheeps.collection:
                 sheep.update(delta_time, self.game_level)
 
             self.camera_update(self.camera, self.player, WORLD_WIDTH, WORLD_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)
 
             #TODO: all this collision stuff to seperate functions
-            collected_indices = self.player.check_collection(self.hay)
+            collected_indices = self.player.check_collection(self.hay.collection)
             if collected_indices:
                 for index in sorted(collected_indices, reverse=True):
-                    self.hay.pop(index)
+                    self.hay.collection.pop(index)
                     self.player.hay += 1
             
-            collided_sheep = self.player.check_sheep_collision(self.sheep)
+            collided_sheep = self.player.check_sheep_collision(self.sheeps.collection)
             if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_F):
                 if self.player.hay > 0:
-                    self.sheep[collided_sheep].hay += 1
+                    self.sheeps.collection[collided_sheep].hay += 1
                     self.player.hay -= 1
                     self.player.can_transform = True
-            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheep[collided_sheep].is_friendly:
+            if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheeps.collection[collided_sheep].is_friendly:
                 self.player.is_holding = True
                 self.held_sheep_index = collided_sheep
-                self.player.hold_object(self.sheep[collided_sheep])
+                self.player.hold_object(self.sheeps.collection[collided_sheep])
 
         
             if is_key_pressed(KeyboardKey.KEY_G) and self.player.is_holding == True:
-                self.sheep[self.held_sheep_index].is_grounded = False
+                self.sheeps.collection[self.held_sheep_index].is_grounded = False
                 
-                self.sheep[self.held_sheep_index].is_held = False
+                self.sheeps.collection[self.held_sheep_index].is_held = False
                 self.player.is_holding = False
                 # self.player.state = PlayerState.IDLE
 
-            collided_vase = self.player.check_vase_collision(self.vase)
-            if collided_vase >= 0 and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT) and self.vase[collided_vase].full:
-                self.vase[collided_vase].full = False
+            collided_vase = self.player.check_vase_collision(self.vases.collection)
+            if collided_vase >= 0 and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT) and self.vases.collection[collided_vase].full:
+                self.vases.collection[collided_vase].full = False
                 self.player.hay += 3
 
             collided_enemy = self.player.check_enemy_collision(self.cyclops)
@@ -94,20 +90,16 @@ class Game:
     def draw(self):
         begin_mode_2d(self.camera)
         
-        for block in self.solid:
-            block.draw()
+        self.blocks.draw()
 
-        for hay in self.hay:
-            hay.draw()
+        self.hay.draw()
         
-        for vase in self.vase:
-            vase.draw()
+        self.vases.draw()
             
         for cyclops in self.cyclops:
             cyclops.draw()
 
-        for sheep in self.sheep:
-            sheep.draw()
+        self.sheeps.draw()
 
         self.player.draw()
         
@@ -126,14 +118,10 @@ class Game:
 
     def shutdown(self):
         self.player.shutdown()
-        for vase in self.vase:
-            vase.shutdown() 
-        for block in self.solid:
-            block.shutdown()
-        for sheep in self.sheep:
-            sheep.shutdown()
-        for hay in self.hay:
-            hay.shutdown()
+        self.vases.shutdown()
+        self.blocks.shutdown()
+        self.sheeps.shutdown()
+        self.hay.shutdown()
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

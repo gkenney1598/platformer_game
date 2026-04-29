@@ -3,6 +3,27 @@ from settings import *
 from enums import Axis, Tiles, AnimationType, Direction
 from utils.anim import Animation
 
+class Sheeps:
+    def __init__(self):
+        self.collection = []
+        self.texture = None
+        self.width = None
+        self.height = None
+    
+    def startup(self):
+        self.texture = load_texture(str(THIS_DIR) + "\\resources\\sheep.png")
+        self.width = self.texture.width / 19
+        self.height = self.texture.height / 3
+    
+    def draw(self):
+        for sheep in self.collection:
+            frame = sheep.idle.frame(self.width, 1)
+            frame.width *= sheep.direction
+            draw_texture_pro(self.texture, frame, sheep.rect, Vector2(0,0), 0, WHITE)
+                
+    def shutdown(self):
+        unload_texture(self.texture)
+
 class Sheep:
     def __init__(self, x, y):
         self.rect = Rectangle(x, y, TILE_SIZE, TILE_SIZE)
@@ -14,9 +35,6 @@ class Sheep:
         self.hay = 0
         self.is_held = False
         self.walking_y = y
-        self.texture = None
-        self.width = None
-        self.height = None
 
         cur = get_random_value(0, 18)
         self.idle = Animation(first=0, last=18, cur=cur, 
@@ -25,10 +43,6 @@ class Sheep:
                               row=1, sprites_in_row=19)
         self.direction = Direction.RIGHT
     
-    def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\resources\\sheep.png")
-        self.width = self.texture.width / self.idle.sprites_in_row
-        self.height = self.texture.height / 3
 
     def update(self, delta_time, level):
         # 1. Apply Gravity
@@ -91,13 +105,3 @@ class Sheep:
                                 self.vy = 0.0 
                             
                         sheep_rect = self.rect# Update rect after resolution
-    
-    def draw(self):
-        """Draws the enemy as a red rectangle with a directional indicator."""
-        frame = self.idle.frame(self.width, 1)
-        frame.width *= self.direction
-        draw_texture_pro(self.texture, frame, self.rect, Vector2(0,0), 0, WHITE)
-        
-            
-    def shutdown(self):
-        unload_texture(self.texture)
