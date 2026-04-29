@@ -281,3 +281,17 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/29/26
+**add background**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [background](https://es.pinterest.com/pin/11399805458451431/)
+**feat: add background**
+.......
+Next/TO DO:
+* Add better counter for hay
+* Add end of first level logic
+* Major code refactor
+* Add game states
+

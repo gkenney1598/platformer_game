@@ -21,6 +21,9 @@ class Game:
 
 
         self.held_sheep_index = None
+        self.background = None
+        self.background_rec = None
+        self.rec = Rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
 
     def startup(self):
         self.player.startup()
@@ -29,6 +32,8 @@ class Game:
         self.sheeps.startup()
         self.hay.startup()
         self.cyclopses.startup()
+        self.background = load_texture(str(THIS_DIR) + "\\resources\\background.png")
+        self.background_rec = (0, 0, self.background.width, self.background.height)
 
     def update(self):
         delta_time = get_frame_time()
@@ -91,6 +96,7 @@ class Game:
                     self.player.state = PlayerState.SHEEP_BLEET
 
     def draw(self):
+        draw_texture_pro(self.background, self.background_rec, self.rec, Vector2(0,0), 0, WHITE)
         begin_mode_2d(self.camera)
         
         self.blocks.draw()
@@ -112,6 +118,8 @@ class Game:
 
         hay_text = f"Number of hay: {self.player.hay}"
         draw_text(hay_text, 10, 40, 20, BLACK)
+
+        
 
     def shutdown(self):
         self.player.shutdown()
