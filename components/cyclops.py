@@ -1,15 +1,30 @@
 from pyray import *
 from settings import *
-from enums import Tiles, CyclopsState
+from enums import Tiles, CyclopsState, Direction, AnimationType
+from utils.anim import Animation
 from components.healthbar import HealthBar
+
+class Cyclopses:
+    def __init__(self):
+        self.collection = []
+        self.texture = None
+    
+    def startup(self):
+        self.texture = load_texture(str(THIS_DIR) + "\\resources\\cyclops.png")
+
+    def draw(self):
+        for cyclops in self.collection:
+            cyclops.draw(self.texture)
+    
+    def shutdown(self):
+        unload_texture(self.texture)
+
 
 class Cyclops:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.width = TILE_SIZE * 0.7
-        self.height = TILE_SIZE * 0.7
-        self.rect = Rectangle(x, y, self.width, self.height)
+        self.rect = Rectangle(x, y, TILE_SIZE * 2, TILE_SIZE * 2.5)
         self.state = CyclopsState.WALKING
         
         # Physics/Movement
@@ -18,7 +33,7 @@ class Cyclops:
         self.is_grounded = False
 
         self.health = 100
-        self.health_bar = HealthBar(self.health, x, y-10, self.width, 5)
+        self.health_bar = HealthBar(self.health, x, y, self.rect.width / 2, 5)
 
         self.angry_time = 2
         self.angry_timer = 0
@@ -26,9 +41,24 @@ class Cyclops:
         self.attack_cooldown = 0.75
         self.attack_timer = 0
 
-    def get_rect(self):
-        """Returns the enemy's collision bounding box."""
-        return self.rect
+        self.moving = True
+        self.direction = Direction.RIGHT
+        self.walk = Animation(first=0, last=11, cur=0, step=1, 
+                              duration=0.2, duration_left=0.2, 
+                              anim_type=AnimationType.REPEATING,
+                            row=1, sprites_in_row=12)
+        self.angry = Animation(first=0, last=6, cur=0, step=1, 
+                              duration=0.2, duration_left=0.2, 
+                              anim_type=AnimationType.REPEATING,
+                            row=2, sprites_in_row=7)
+        self.attack_anim = Animation(first=0, last=12, cur=0, step=1, 
+                              duration=0.05, duration_left=0.05, 
+                              anim_type=AnimationType.ONESHOT,
+                            row=3, sprites_in_row=13)
+        self.dead = Animation(first=0, last=8, cur=0, step=1, 
+                              duration=0.4, duration_left=0.4, 
+                              anim_type=AnimationType.ONESHOT,
+                            row=6, sprites_in_row=9) 
 
     def update(self, delta_time, level, player_rect):
         match self.state:
@@ -37,10 +67,11 @@ class Cyclops:
                     self.vy = 0.0
                 self.vy += GRAVITY_ENTITY * delta_time
                 self.is_grounded = False 
+                self.walk.update(delta_time)
 
             case CyclopsState.DEAD:
-                self.vx = 0
-                self.vy = 0
+                self.moving = False
+                self.dead.update(delta_time)
             case CyclopsState.ANGRY:
                 if self.is_grounded:
                     self.vy = 0.0
@@ -49,23 +80,36 @@ class Cyclops:
                 self.angry_timer += delta_time
                 if player_rect.x < self.rect.x:
                     self.vx = -ENEMY_SPEED
+                    self.direction = Direction.LEFT
                 else:
                     self.vx = ENEMY_SPEED
-                    
-        self.rect.x += self.vx * delta_time
-        self.handle_tile_collision(level, 'X')
-        
-        self.rect.y += self.vy * delta_time
-        self.handle_tile_collision(level, 'Y')
+                    self.direction = Direction.RIGHT
+                self.angry.update(delta_time)
+            case CyclopsState.ATTACK:
+                self.attack_anim.update(delta_time)
+                if self.attack_anim.done:
+                    self.state = CyclopsState.ANGRY
+                    self.attack_anim.reset()
+                    self.moving = True
 
-        self.health_bar.update(self.rect.x, self.rect.y - 20)
-        self.health_bar.update_health(self.health)
+        if self.moving:         
+            self.rect.x += self.vx * delta_time
+            self.handle_tile_collision(level, 'X')
+            
+            self.rect.y += self.vy * delta_time
+            self.handle_tile_collision(level, 'Y')
+
+        
+        self.health_bar.update(self.rect.x + int(self.rect.width/4), self.rect.y + 20)
+        self.health_bar.update_health(self.health) 
 
         if self.health <= 0:
             self.state = CyclopsState.DEAD
 
     def attack(self, delta_time):
         if self.attack_timer >= self.attack_cooldown:
+            self.state = CyclopsState.ATTACK
+            self.moving = False
             self.attack_timer = 0
             return 10
         self.attack_timer += delta_time
@@ -73,7 +117,7 @@ class Cyclops:
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
-        enemy_rect = self.get_rect()
+        enemy_rect = self.rect
         px, py, pw, ph = enemy_rect.x, enemy_rect.y, enemy_rect.width, enemy_rect.height
         
         min_col = int(px / TILE_SIZE)
@@ -100,6 +144,7 @@ class Cyclops:
                                     elif self.vx < 0:
                                         self.rect.x = tile_rect[0] + TILE_SIZE
                                     self.vx *= -1 # Reverse direction
+                                    self.direction = Direction.RIGHT if self.vx > 0 else Direction.LEFT
                                 
                             elif axis == 'Y':
                                 if self.vy >= 0: # Hitting Ground
@@ -108,7 +153,7 @@ class Cyclops:
                                     
                                 self.vy = 0.0 
                                 
-                            enemy_rect = self.get_rect() # Update rect after resolution
+                            enemy_rect = self.rect
 
     def check_player_nearby(self, player_attention_box):
         match self.state:
@@ -120,25 +165,24 @@ class Cyclops:
                     self.state = CyclopsState.WALKING
                     self.angry_timer = 0
 
-    def draw(self):
-
-        # Draw a small indicator for state for debugging
-        center_x = int(self.rect.x + self.rect.width / 2)
-        center_y = int(self.rect.y + self.rect.height / 2)
-
-
+    def draw(self, texture):
         match self.state:
             case CyclopsState.WALKING:
-                draw_rectangle(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), RED)
-                draw_rectangle_lines(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), BLACK)
-                self.health_bar.draw()
-                draw_text("W", center_x, center_y, 10, BLACK)
+                frame = self.walk.frame(texture.width / 15, 1)
+                frame.width *= self.direction
+                draw_texture_pro(texture, frame, self.rect, Vector2(0, 0), 0, WHITE)
             case CyclopsState.ANGRY:
-                draw_text("A", center_x, center_y, 10, BLACK)
-                draw_rectangle(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), RED)
-                draw_rectangle_lines(int(self.rect.x), int(self.rect.y), int(self.rect.width), int(self.rect.height), BLACK)
-                self.health_bar.draw()
+                frame = self.angry.frame(texture.width / 15, 2)
+                frame.width *= self.direction
+                draw_texture_pro(texture, frame, self.rect, Vector2(0, 0), 0, WHITE)
             case CyclopsState.DEAD:
-                pass
+                frame = self.dead.frame(texture.width / 15, 6)
+                draw_texture_pro(texture, frame, self.rect, Vector2(0,0), 0, WHITE)
+            case CyclopsState.ATTACK:
+                frame = self.attack_anim.frame(texture.width / 15, 3)
+                frame.width *= self.direction
+                draw_texture_pro(texture, frame, self.rect, Vector2(0, 0), 0, WHITE)
+        if self.state != CyclopsState.DEAD and not self.dead.done:
+            self.health_bar.draw()
 
 

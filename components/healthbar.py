@@ -20,8 +20,5 @@ class HealthBar:
         self.health_rect.width = (self.current_health / self.max_health) * self.bar_width 
 
     def draw(self):
-        # Draw background (gray)
         draw_rectangle_rec(self.bar_rect, GRAY)
-        
-        # Draw foreground (green)
         draw_rectangle_rec(self.health_rect, GREEN)

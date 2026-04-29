@@ -1,7 +1,7 @@
 from pyray import *
 from settings import *
 from enums import Tiles
-from components.cyclops import Cyclops
+from components.cyclops import Cyclopses, Cyclops
 from components.hay import Hay
 from components.sheep import Sheeps, Sheep
 from components.vase import Vases, Vase
@@ -15,7 +15,7 @@ class Level:
         replaces their spawn points with air, and returns the modified collision map and entity lists.
         """
         sheeps = Sheeps()
-        cyclops = []
+        cyclopses = Cyclopses()
         hay = Hay()
         vases = Vases()
         solid = Blocks()
@@ -34,7 +34,7 @@ class Level:
                 
                 if new_level[r][c] == Tiles.CYCLOPS:
                     # Enemy position is top-left
-                    cyclops.append(Cyclops(x, y))
+                    cyclopses.collection.append(Cyclops(x, y))
                     new_level[r][c] = Tiles.AIR 
 
                 elif new_level[r][c] == Tiles.HAY:
@@ -65,17 +65,5 @@ class Level:
 
 
 
-        return new_level, sheeps, cyclops, hay, vases, solid
-    
-    # def draw_level(level):
-    #     """Draws the solid tiles of the level map."""
-    #     for row in range(TILE_ROWS):
-    #         for col in range(TILE_COLS):
-    #             tile_value = level[row][col]
-    #             if tile_value == Tiles.SOLID:
-    #                 x = col * TILE_SIZE
-    #                 y = row * TILE_SIZE
-                    
-    #                 draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
-    #                 draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
+        return new_level, sheeps, cyclopses, hay, vases, solid
     

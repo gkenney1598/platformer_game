@@ -7,7 +7,7 @@ from components.cyclops import Cyclops
 
 class Game:
     def __init__(self):
-        self.game_level, self.sheeps, self.cyclops, self.hay, self.vases, self.blocks = Level.parse_level(LEVEL)
+        self.game_level, self.sheeps, self.cyclopses, self.hay, self.vases, self.blocks = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
@@ -28,6 +28,7 @@ class Game:
         self.blocks.startup()
         self.sheeps.startup()
         self.hay.startup()
+        self.cyclopses.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -37,7 +38,7 @@ class Game:
             self.player.update(delta_time, self.game_level)
             
             # Update Enemies
-            for cyclops in self.cyclops:
+            for cyclops in self.cyclopses.collection:
                 cyclops.update(delta_time, self.game_level, self.player.rect)
                 cyclops.check_player_nearby(self.player.attention_box)
 
@@ -77,30 +78,22 @@ class Game:
                 self.vases.collection[collided_vase].full = False
                 self.player.hay += 3
 
-            collided_enemy = self.player.check_enemy_collision(self.cyclops)
+            collided_enemy = self.player.check_enemy_collision(self.cyclopses.collection)
             if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
                     self.player.state = PlayerState.ATTACKING
-            if collided_enemy != -1 and self.cyclops[collided_enemy].state != CyclopsState.DEAD:
+            if collided_enemy != -1 and self.cyclopses.collection[collided_enemy].state != CyclopsState.DEAD:
                 if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
-                        self.cyclops[collided_enemy].health -= 25
-                self.player.health -= self.cyclops[collided_enemy].attack(delta_time)
-            # else:
-            #     self.player.state = PlayerState.IDLE
+                        self.cyclopses.collection[collided_enemy].health -= 25
+                self.player.health -= self.cyclopses.collection[collided_enemy].attack(delta_time)
 
     def draw(self):
         begin_mode_2d(self.camera)
         
         self.blocks.draw()
-
-        self.hay.draw()
-        
-        self.vases.draw()
-            
-        for cyclops in self.cyclops:
-            cyclops.draw()
-
+        self.hay.draw()       
+        self.vases.draw() 
+        self.cyclopses.draw()
         self.sheeps.draw()
-
         self.player.draw()
         
         # End the 2D camera mode
@@ -122,6 +115,7 @@ class Game:
         self.blocks.shutdown()
         self.sheeps.shutdown()
         self.hay.shutdown()
+        self.cyclopses.shutdown()
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

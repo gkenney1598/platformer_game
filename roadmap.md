@@ -236,3 +236,19 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/29/26
+**Add cyclops sprites**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [Cyclops Sprite](https://elthen.itch.io/2d-pixel-art-cyclops-sprites)
+**feat: add cyclops sprites**
+.......
+Next/TO DO:
+* Add sheep special abilities and sprites for player
+* Add indicator for sheep friendly
+* Improve appearance of first level
+* Add end of first level logic
+* Major code refactor
+* Add game states
+
