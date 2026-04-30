@@ -7,7 +7,7 @@ from components.cyclops import Cyclops
 
 class Game:
     def __init__(self):
-        self.game_level, self.sheeps, self.cyclopses, self.hay, self.vases, self.blocks = Level.parse_level(LEVEL)
+        self.game_level, self.sheeps, self.cyclopses, self.hay, self.vases, self.blocks, self.fences, self.door = Level.parse_level(LEVEL)
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.score = 0
         self.game_state = "PLAYING" 
@@ -26,6 +26,8 @@ class Game:
         self.rec = Rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
 
     def startup(self):
+        self.fences.startup()
+        self.door.startup()
         self.player.startup()
         self.vases.startup()
         self.blocks.startup()
@@ -98,9 +100,10 @@ class Game:
     def draw(self):
         draw_texture_pro(self.background, self.background_rec, self.rec, Vector2(0,0), 0, WHITE)
         self.hay.draw_hay_count(self.player.hay)
-        
+
         begin_mode_2d(self.camera)
-        
+        self.door.draw()
+        self.fences.draw()
         self.blocks.draw()
         self.hay.draw()       
         self.vases.draw() 
@@ -114,6 +117,8 @@ class Game:
         
 
     def shutdown(self):
+        self.door.shutdown()
+        self.fences.shutdown()
         self.player.shutdown()
         self.vases.shutdown()
         self.blocks.shutdown()

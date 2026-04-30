@@ -19,6 +19,8 @@ class Tiles(enumerate):
     BOUNDARY = 5
     VASE_EMPTY = 6
     VASE_FULL = 7
+    DOOR = 8
+    FENCE = 9
     
 class SheepState(enumerate):
     IDLE = 0

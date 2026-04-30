@@ -321,3 +321,16 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/29/26
+**feat: add fence and door**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [Fence](https://smallmak.itch.io/topdown-fence-posts), [Door](https://arsule.itch.io/free-1616-plaftormer-asset-pack)
+**feat: and fence and door**
+.......
+Next/TO DO:
+* Add end of first level logic
+* Major code refactor
+* Add game states
+

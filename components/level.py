@@ -5,7 +5,9 @@ from components.cyclops import Cyclopses, Cyclops
 from components.hay import Hay
 from components.sheep import Sheeps, Sheep
 from components.vase import Vases, Vase
-from components.blocks import Blocks, Grass, Pillar
+from components.environment.blocks import Blocks, Grass, Pillar
+from components.environment.fence import Fences, Fence
+from components.environment.door import Door
 
 class Level:
 
@@ -19,19 +21,17 @@ class Level:
         hay = Hay()
         vases = Vases()
         solid = Blocks()
+        fences = Fences()
+        door = None
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
         new_level = [row[:] for row in level] 
         
+        #TODO match case
         for r in range(TILE_ROWS):
             for c in range(TILE_COLS):
                 x = c * TILE_SIZE
                 y = r * TILE_SIZE
 
-                # if new_level[r][c] == Tiles.COIN:
-                #     # Coin position is center
-                #     coins.append((x + TILE_SIZE / 2, y + TILE_SIZE / 2))
-                #     new_level[r][c] = Tiles.AIR
-                
                 if new_level[r][c] == Tiles.CYCLOPS:
                     # Enemy position is top-left
                     cyclopses.collection.append(Cyclops(x, y))
@@ -63,7 +63,15 @@ class Level:
                     else:
                         solid.collection.append(Pillar(x, y))
 
+                elif new_level[r][c] == Tiles.FENCE:
+                    new_level[r][c] = Tiles.AIR
+                    fences.collection.append(Fence(x, y))
+
+                elif new_level[r][c] == Tiles.DOOR:
+                    new_level[r][c] == Tiles.AIR
+                    door = Door(x, y)
 
 
-        return new_level, sheeps, cyclopses, hay, vases, solid
+
+        return new_level, sheeps, cyclopses, hay, vases, solid, fences, door
     
