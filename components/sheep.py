@@ -30,6 +30,11 @@ class Sheeps:
     def shutdown(self):
         unload_texture(self.texture)
 
+    def sheep_collected(self):
+        for sheep in self.collection:
+            if not sheep.is_collected: return False
+        return True
+
 class Sheep:
     def __init__(self, x, y):
         self.rect = Rectangle(x, y, TILE_SIZE, TILE_SIZE)

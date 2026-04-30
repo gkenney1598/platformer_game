@@ -347,3 +347,14 @@ Next/TO DO:
 * Add game states
 * Add startup, pause, intruction screens
 
+### Date: 04/30/26
+**Refactor level one into own class**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**refactor: level one class**
+.......
+Next/TO DO:
+* Major code refactor
+* Add startup, pause, intruction screens

@@ -102,7 +102,7 @@ class Player:
                 self.state = PlayerState.SHEEP_IDLE
             else:
                 self.state = PlayerState.IDLE
-        
+
         if self.is_grounded:
             self.vy = 0.0
             
