@@ -97,10 +97,12 @@ class Game:
 
     def draw(self):
         draw_texture_pro(self.background, self.background_rec, self.rec, Vector2(0,0), 0, WHITE)
+        self.hay.draw_hay_count(self.player.hay)
+        
         begin_mode_2d(self.camera)
         
         self.blocks.draw()
-        self.hay.draw(self.player.hay)       
+        self.hay.draw()       
         self.vases.draw() 
         self.cyclopses.draw()
         self.sheeps.draw()
@@ -108,8 +110,6 @@ class Game:
         
         end_mode_2d()
 
-        # hay_text = f"Number of hay: {self.player.hay}"
-        # draw_text(hay_text, 10, 40, 20, BLACK)
 
         
 

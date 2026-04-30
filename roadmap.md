@@ -308,3 +308,16 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/29/26
+**bug fix hay count visual stick upper left**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**bug fix: hay count visual**
+.......
+Next/TO DO:
+* Add end of first level logic
+* Major code refactor
+* Add game states
+
