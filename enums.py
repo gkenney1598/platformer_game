@@ -10,6 +10,7 @@ class PlayerState(enumerate):
     SHEEP_WALKING = 7
     SHEEP_BLEET = 8
     DEAD = 9
+    
 class Tiles(enumerate):
     AIR = 0
     SOLID = 1

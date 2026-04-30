@@ -6,7 +6,7 @@ class Door:
         self.rect_door = Rectangle(x, y, TILE_SIZE, TILE_SIZE * 2)
         self.rect_arch = Rectangle(x + TILE_SIZE, y, TILE_SIZE, TILE_SIZE)
         self.texture = None
-        self.source_rect_open = Rectangle(CAVE_TILE_SIZE * 5, 0, CAVE_TILE_SIZE, CAVE_TILE_SIZE * 2)
+        self.source_rect_open = Rectangle(CAVE_TILE_SIZE * 4, CAVE_TILE_SIZE * 2, CAVE_TILE_SIZE, CAVE_TILE_SIZE * 2)
         self.source_rect_close = Rectangle(CAVE_TILE_SIZE * 4, 0, CAVE_TILE_SIZE, CAVE_TILE_SIZE * 2)
         self.source_rect_arch = Rectangle(CAVE_TILE_SIZE * 8, CAVE_TILE_SIZE * 12, CAVE_TILE_SIZE, CAVE_TILE_SIZE)
         self.locked = True

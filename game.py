@@ -37,6 +37,8 @@ class Game:
         self.background = load_texture(str(THIS_DIR) + "\\resources\\background.png")
         self.background_rec = (0, 0, self.background.width, self.background.height)
 
+        print(TILE_COLS)
+
     def update(self):
         delta_time = get_frame_time()
         
@@ -96,6 +98,14 @@ class Game:
                     self.player.hay += 3
                 else:
                     self.player.state = PlayerState.SHEEP_BLEET
+            
+            if self.door.locked and self.sheep_collected():
+                self.door.locked = False
+                print("unlocked")
+            
+            if not self.door.locked and self.player.is_sheep:
+                if check_collision_recs(self.player.rect, self.door.rect_door) and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT):
+                    self.door.open = True
 
     def draw(self):
         draw_texture_pro(self.background, self.background_rec, self.rec, Vector2(0,0), 0, WHITE)
@@ -113,9 +123,6 @@ class Game:
         
         end_mode_2d()
 
-
-        
-
     def shutdown(self):
         self.door.shutdown()
         self.fences.shutdown()
@@ -125,6 +132,11 @@ class Game:
         self.sheeps.shutdown()
         self.hay.shutdown()
         self.cyclopses.shutdown()
+
+    def sheep_collected(self):
+        for sheep in self.sheeps.collection:
+            if not sheep.is_collected: return False
+        return True
 
     def camera_update(self, camera, player, world_width, world_height, screen_width, screen_height):
         """Centers the camera on the player and clamps the camera's target to the world bounds."""

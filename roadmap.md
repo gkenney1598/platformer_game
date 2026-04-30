@@ -334,3 +334,16 @@ Next/TO DO:
 * Major code refactor
 * Add game states
 
+### Date: 04/30/26
+**feat: add end of level logic**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add end of level logic**
+.......
+Next/TO DO:
+* Major code refactor
+* Add game states
+* Add startup, pause, intruction screens
+

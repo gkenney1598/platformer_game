@@ -41,6 +41,7 @@ class Sheep:
         self.hay = 0
         self.is_held = False
         self.walking_y = y
+        self.is_collected = False
 
         cur = get_random_value(0, 18)
         self.idle = Animation(first=0, last=18, cur=cur, 
@@ -56,7 +57,10 @@ class Sheep:
     
 
     def update(self, delta_time, level):
-        # 1. Apply Gravity
+
+        if not self.is_collected and self.rect.x > SHEEP_COLLECTION_BOUNDS[0] * TILE_SIZE and self.rect.x < SHEEP_COLLECTION_BOUNDS[1] * TILE_SIZE and self.rect.y > SCREEN_HEIGHT - 4 * TILE_SIZE:
+            self.is_collected = True
+
         match self.state:
             case SheepState.IDLE:
                 if self.is_grounded:
