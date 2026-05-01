@@ -15,6 +15,10 @@ class Sheeps:
         self.width = self.texture.width / 19
         self.height = self.texture.height / 3
     
+    def update(self, game_level, delta_time):
+        for sheep in self.collection:
+            sheep.update(delta_time, game_level)
+    
     def draw(self):
         for sheep in self.collection:
             match sheep.state:
@@ -22,6 +26,7 @@ class Sheeps:
                     frame = sheep.idle.frame(self.width, 1)
                     frame.width *= sheep.direction
                     draw_texture_pro(self.texture, frame, sheep.rect, Vector2(0,0), 0, WHITE)
+
                 case SheepState.JUMP:
                     frame = sheep.jump.frame(self.width, 1)
                     frame.width *= sheep.direction
@@ -38,11 +43,10 @@ class Sheeps:
 class Sheep:
     def __init__(self, x, y):
         self.rect = Rectangle(x, y, TILE_SIZE, TILE_SIZE)
-        # Physics/Movement
         self.vx = get_random_value(25, 50)
         self.vy = 0.0 
         self.is_grounded = True
-        self.is_friendly = False #TODO: add sheep states
+        self.is_friendly = False
         self.hay = 0
         self.is_held = False
         self.walking_y = y
@@ -63,6 +67,7 @@ class Sheep:
 
     def update(self, delta_time, level):
 
+        #check if sheep is in fenced area
         if not self.is_collected and self.rect.x > SHEEP_COLLECTION_BOUNDS[0] * TILE_SIZE and self.rect.x < SHEEP_COLLECTION_BOUNDS[1] * TILE_SIZE and self.rect.y > SCREEN_HEIGHT - 4 * TILE_SIZE:
             self.is_collected = True
 
@@ -85,6 +90,7 @@ class Sheep:
                     self.state = SheepState.JUMP
 
                 self.idle.update(delta_time)
+
             case SheepState.JUMP:
                 self.jump.update(delta_time)
                 if self.jump.done:
@@ -97,14 +103,12 @@ class Sheep:
 
     def handle_tile_collision(self, level, axis):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
-        sheep_rect = self.rect
-        px, py, pw, ph = sheep_rect.x, sheep_rect.y, sheep_rect.width, sheep_rect.height
 
         
-        min_col = int(px / TILE_SIZE)
-        max_col = int((px + pw) / TILE_SIZE)
-        min_row = int(py / TILE_SIZE)
-        max_row = int((py + ph) / TILE_SIZE)
+        min_col = int(self.rect.x / TILE_SIZE)
+        max_col = int((self.rect.x + self.rect.width) / TILE_SIZE)
+        min_row = int(self.rect.y / TILE_SIZE)
+        max_row = int((self.rect.y + self.rect.height) / TILE_SIZE)
 
 
         for row in range(min_row, max_row + 1):
@@ -114,22 +118,19 @@ class Sheep:
                 if level[row][col] == Tiles.SOLID or level[row][col] == Tiles.BOUNDARY:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
-                    if check_collision_recs(sheep_rect, tile_rect):
+                    if check_collision_recs(self.rect, tile_rect):
                         match axis:
                             case Axis.X_AXIS:
-                                # Reverses direction on horizontal collision
                                 if self.vx > 0:
                                     self.rect.x = tile_rect[0] - self.rect.width
                                 elif self.vx < 0:
                                     self.rect.x = tile_rect[0] + TILE_SIZE
-                                self.vx *= -1 # Reverse direction
+                                self.vx *= -1 
                                 self.direction = Direction.RIGHT if self.vx > 0 else Direction.LEFT
                             
                             case Axis.Y_AXIS:
-                                if self.vy >= 0: # Hitting Ground
+                                if self.vy >= 0: 
                                     self.rect.y = tile_rect[1] - self.rect.height
                                     self.is_grounded = True 
                                 
                                 self.vy = 0.0 
-                            
-                        sheep_rect = self.rect# Update rect after resolution

@@ -31,6 +31,7 @@ class Player:
         self.health = 100
         self.health_bar = HealthBar(self.health, (self.rect.x + self.rect.width) / 4, y, self.rect.width, 5)
 
+        #Odysseus texture
         self.texture = None
         self.tile_size = None
         self.player_direction = Direction.RIGHT
@@ -57,6 +58,7 @@ class Player:
                                 anim_type=AnimationType.ONESHOT,
                                 row=20, sprites_in_row=6)
         
+        #sheep texture
         self.sheep_texture = None
         self.sheep_idle = Animation(first=0, last=18, cur=0, 
                               step=1, duration=0.3, duration_left=0.3, 
@@ -82,6 +84,8 @@ class Player:
         self.sheep_texture = load_texture(str(THIS_DIR) + "\\resources\sheep.png")
 
     def update(self, delta_time, level, held_object = None):
+
+        #Handle User Input
         self.vx = 0.0
         if is_key_down(KeyboardKey.KEY_A):
             self.vx = -PLAYER_SPEED
@@ -90,6 +94,7 @@ class Player:
                 self.state = PlayerState.SHEEP_WALKING
             elif self.state != PlayerState.JUMPING:
                 self.state = PlayerState.WALKING
+
         if is_key_down(KeyboardKey.KEY_D):
             self.vx = PLAYER_SPEED
             self.player_direction = Direction.RIGHT
@@ -97,6 +102,7 @@ class Player:
                 self.state = PlayerState.SHEEP_WALKING
             elif self.state != PlayerState.JUMPING:
                 self.state = PlayerState.WALKING
+
         if is_key_released(KeyboardKey.KEY_A) or is_key_released(KeyboardKey.KEY_D):
             if self.is_sheep:
                 self.state = PlayerState.SHEEP_IDLE
@@ -108,7 +114,8 @@ class Player:
             
         if is_key_pressed(KeyboardKey.KEY_SPACE) and self.is_grounded:
             self.vy = JUMP_VELOCITY
-            self.state = PlayerState.JUMPING
+            if not self.is_sheep:
+                self.state = PlayerState.JUMPING
 
         self.vy += GRAVITY_PLAYER * delta_time
         if self.vy > 1000:
@@ -118,23 +125,23 @@ class Player:
 
         self.rect.x += self.vx * delta_time
         self.attention_box.x = self.rect.x - 200
-        self.bounding_box.x = self.rect.x + 20
-        
+        self.bounding_box.x = self.rect.x + 20       
         self.handle_tile_collision(level, 'X')
         
         self.rect.y += self.vy * delta_time
         self.attention_box.y = self.rect.y - 10
         self.bounding_box.y = self.rect.y
         self.handle_tile_collision(level, 'Y')
+
         self.health_bar.update(self.rect.x + self.rect.width / 4, self.rect.y - 5)
         self.health_bar.update_health(self.health)
         
-
         self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
 
         if is_key_pressed(KeyboardKey.KEY_T) and self.can_transform:
             self.is_sheep = True
             self.state = PlayerState.SHEEP_IDLE
+
         if is_key_pressed(KeyboardKey.KEY_Y):
             self.is_sheep = False
             self.state = PlayerState.IDLE
@@ -145,41 +152,46 @@ class Player:
         if self.health <= 0:
             self.state = PlayerState.DEAD
         
+        #Update animations
         match self.state:
             case PlayerState.SHEEP_IDLE:
                 self.sheep_idle.update(delta_time)
+
             case PlayerState.SHEEP_WALKING:
                 self.sheep_walk.update(delta_time)
+
             case PlayerState.SHEEP_BLEET:
                 self.sheep_bleet.update(delta_time)
+                
                 if self.sheep_bleet.done:
-                    self.state = PlayerState.IDLE
+                    self.state = PlayerState.SHEEP_IDLE
                     self.sheep_bleet.reset()
+
             case PlayerState.IDLE:
                 self.idle.update(delta_time)
+
             case PlayerState.JUMPING:
                 self.jump.update(delta_time)
+
             case PlayerState.WALKING:
                 self.walk.update(delta_time)
+
             case PlayerState.ATTACKING:
                 self.attack.update(delta_time)
                 if self.attack.done:
                     self.state = PlayerState.IDLE
                     self.attack.reset()
+
             case PlayerState.DEAD:
                 self.dead.update(delta_time)
                 if self.dead.cur == self.dead.last:
                     self.rect.y += 10
             
     def handle_tile_collision(self, level, axis):
-        """Performs AABB collision checks against solid tiles and resolves the collision."""
-        player_rect = self.bounding_box
-        px, py, pw, ph = player_rect.x, player_rect.y, player_rect.width, player_rect.height
-        
-        min_col = int(px / TILE_SIZE)
-        max_col = int((px + pw) / TILE_SIZE)
-        min_row = int(py / TILE_SIZE)
-        max_row = int((py + ph) / TILE_SIZE)
+        min_col = int(self.bounding_box.x / TILE_SIZE)
+        max_col = int((self.bounding_box.x + self.bounding_box.width) / TILE_SIZE)
+        min_row = int(self.bounding_box.y / TILE_SIZE)
+        max_row = int((self.bounding_box.y + self.bounding_box.height) / TILE_SIZE)
 
         for row in range(min_row, max_row + 1):
             for col in range(min_col, max_col + 1):
@@ -190,104 +202,34 @@ class Player:
                 if level[row][col] == Tiles.SOLID:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
-                    if check_collision_recs(player_rect, tile_rect):
+                    if check_collision_recs(self.bounding_box, tile_rect):
                         
                         if axis == 'X':
-                            if self.vx > 0: # Moving Right
+                            if self.vx > 0: 
                                 self.rect.x = tile_rect[0] - self.rect.width + 20
                                 self.bounding_box.x = tile_rect[0] - self.bounding_box.width
-                            elif self.vx < 0: # Moving Left
+                            elif self.vx < 0: 
                                 self.rect.x = tile_rect[0] + TILE_SIZE - 20
                                 self.bounding_box.x = tile_rect[0] + TILE_SIZE
                             self.vx = 0.0 
                             
                         elif axis == 'Y':
-                            if self.vy >= 0: # Falling (Hitting Ground)
+                            if self.vy >= 0: # Hitting Ground
                                 self.rect.y = tile_rect[1] - self.rect.height
                                 self.bounding_box.y = tile_rect[1] - self.bounding_box.height
                                 self.is_grounded = True
                                 if self.state == PlayerState.JUMPING:
                                     self.state = PlayerState.IDLE
                                     self.jump.reset()
-                                # print("grounded")
-                            elif self.vy < 0: # Jumping (Hitting Ceiling)
+
+                            elif self.vy < 0: # Hitting Ceilling
                                 self.rect.y = tile_rect[1] + TILE_SIZE
                                 self.bounding_box.y = tile_rect[1] + TILE_SIZE
                                 
                             self.vy = 0.0 
                             
-                        player_rect = self.bounding_box
-                        px, py, pw, ph = player_rect.x, player_rect.y, player_rect.width, player_rect.height
-
-                elif level[row][col] == Tiles.HAY:
-                    tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                    if check_collision_recs(player_rect, tile_rect):
-                        level[row][col] == Tiles.AIR
-                        self.hay += 1
-                        
-    def check_collection(self, hay):
-        """Checks for collision with coins and returns indices of collected coins."""
-        collected_indices = []
-        player_rect = self.rect
-        
-        for i, hay in enumerate(hay):
-            
-            if check_collision_recs(player_rect, hay) and is_key_pressed(KeyboardKey.KEY_F):
-                collected_indices.append(i)
-                
-        return collected_indices
-    
-    def check_sheep_collision(self, sheep):
-        
-        for i, sheep in enumerate(sheep):
-
-            if check_collision_recs(self.bounding_box, sheep.rect):
-                return i
-                              
-        return -1
-    
-    def check_vase_collision(self, vase):
-        for i, vase in enumerate(vase):
-            if check_collision_recs(self.bounding_box, vase.rect):
-                return i 
-            
-        return -1
-    
-    def check_enemy_collision(self, enemies):
-        for i, enemy in enumerate(enemies):
-            if check_collision_recs(self.bounding_box, enemy.rect):
-                return i
-            
-        return -1
-    
-    # def check_enemy_collision(self, enemies):
-    #     """Checks for collision with enemies and determines outcome (stomp or death).
-    #     Returns (hit_type, enemy_index) or (None, -1).
-    #     hit_type: "STOMP" (safe kill) or "LETHAL" (death)
-    #     """
-    #     player_rect = self.get_rect()
-    #     px, py, pw, ph = player_rect
-        
-    #     for i, enemy in enumerate(enemies):
-    #         enemy_rect = enemy.get_rect()
-            
-    #         if check_collision_recs(player_rect, enemy_rect):
-                
-    #             # STOMP Condition: 
-    #             # 1. Player is falling (vy > 0) 
-    #             # 2. Player's bottom is above the enemy's mid-point (approximate stomping zone)
-    #             is_stompable_zone = py + ph < enemy.y + enemy.height * 0.5 
-                
-    #             if self.vy > 0 and is_stompable_zone:
-    #                 return "STOMP", i
-    #             else:
-    #                 # Lethal collision (side, head, or missing the stomp zone)
-    #                 return "LETHAL", i
-                    
-    #     return None, -1
     
     def reset(self):
-        """Resets the player to their starting position."""
         self.rect.x = self.start_x
         self.rect.y = self.start_y
         self.vx = 0.0
@@ -305,30 +247,37 @@ class Player:
                 frame = self.sheep_idle.frame(self.width, 8)
                 frame.width *= self.player_direction
                 draw_texture_pro(self.sheep_texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+
             case PlayerState.SHEEP_WALKING:
                 frame = self.sheep_walk.frame(self.width, 8)
                 frame.width *= self.player_direction
                 draw_texture_pro(self.sheep_texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+                
             case PlayerState.SHEEP_BLEET:
                 frame = self.sheep_bleet.frame(self.width, 8)
                 frame.width *= self.player_direction
                 draw_texture_pro(self.sheep_texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+
             case PlayerState.ATTACKING:
                 frame = self.attack.frame(self.width, 8)
                 frame.width *= self.player_direction
                 draw_texture_pro(self.texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+
             case PlayerState.IDLE:
                 frame = self.idle.frame(self.width, 2)
                 frame.width *= self.player_direction
                 draw_texture_pro(self.texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+
             case PlayerState.JUMPING:
                 frame = self.jump.frame(self.width, 3)
                 frame.width *= self.player_direction
                 draw_texture_pro(self.texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+
             case PlayerState.WALKING:
                 frame = self.walk.frame(self.width, 11)
                 frame.width *= self.player_direction
                 draw_texture_pro(self.texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
+
             case PlayerState.DEAD:
                 draw_texture_pro(self.texture, self.dead.frame(self.width, 20), self.rect, Vector2(0, 0), 0.0, WHITE)
         

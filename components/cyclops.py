@@ -12,13 +12,18 @@ class Cyclopses:
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\\cyclops.png")
 
+    def update(self, game_level, player, delta_time):
+        for cyclops in self.collection:
+            cyclops.update(delta_time, game_level, player.rect)
+            if not player.is_sheep:
+                cyclops.check_player_nearby(player.attention_box)
+
     def draw(self):
         for cyclops in self.collection:
             cyclops.draw(self.texture)
     
     def shutdown(self):
         unload_texture(self.texture)
-
 
 class Cyclops:
     def __init__(self, x, y):
@@ -27,8 +32,7 @@ class Cyclops:
         self.rect = Rectangle(x, y, TILE_SIZE * 2, TILE_SIZE * 2.5)
         self.state = CyclopsState.WALKING
         
-        # Physics/Movement
-        self.vx = ENEMY_SPEED # Start moving right
+        self.vx = ENEMY_SPEED
         self.vy = 0.0 
         self.is_grounded = False
 
@@ -72,6 +76,7 @@ class Cyclops:
             case CyclopsState.DEAD:
                 self.moving = False
                 self.dead.update(delta_time)
+
             case CyclopsState.ANGRY:
                 if self.is_grounded:
                     self.vy = 0.0
@@ -85,6 +90,7 @@ class Cyclops:
                     self.vx = ENEMY_SPEED
                     self.direction = Direction.RIGHT
                 self.angry.update(delta_time)
+
             case CyclopsState.ATTACK:
                 self.attack_anim.update(delta_time)
                 if self.attack_anim.done:
@@ -116,14 +122,13 @@ class Cyclops:
         return 0
 
     def handle_tile_collision(self, level, axis):
-        """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
-        enemy_rect = self.rect
-        px, py, pw, ph = enemy_rect.x, enemy_rect.y, enemy_rect.width, enemy_rect.height
+        # enemy_rect = self.rect
+        # px, py, pw, ph = enemy_rect.x, enemy_rect.y, enemy_rect.width, enemy_rect.height
         
-        min_col = int(px / TILE_SIZE)
-        max_col = int((px + pw) / TILE_SIZE)
-        min_row = int(py / TILE_SIZE)
-        max_row = int((py + ph) / TILE_SIZE)
+        min_col = int(self.rect.x / TILE_SIZE)
+        max_col = int((self.rect.x + self.rect.width) / TILE_SIZE)
+        min_row = int(self.rect.y / TILE_SIZE)
+        max_row = int((self.rect.y + self.rect.height) / TILE_SIZE)
 
         for row in range(min_row, max_row + 1):
             for col in range(min_col, max_col + 1):
@@ -135,7 +140,7 @@ class Cyclops:
 
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
-                    if check_collision_recs(enemy_rect, tile_rect):
+                    if check_collision_recs(self.rect, tile_rect):
                         if (self.state == CyclopsState.ANGRY and level[row][col] == Tiles.SOLID) or self.state != CyclopsState.ANGRY:                        
                             if axis == 'X':
                                     # Reverses direction on horizontal collision
@@ -160,6 +165,7 @@ class Cyclops:
             case CyclopsState.WALKING:
                 if check_collision_recs(self.rect, player_attention_box):
                     self.state = CyclopsState.ANGRY
+
             case CyclopsState.ANGRY:
                 if not check_collision_recs(self.rect, player_attention_box) and self.angry_timer >= self.angry_time:
                     self.state = CyclopsState.WALKING
@@ -171,17 +177,21 @@ class Cyclops:
                 frame = self.walk.frame(texture.width / 15, 1)
                 frame.width *= self.direction
                 draw_texture_pro(texture, frame, self.rect, Vector2(0, 0), 0, WHITE)
+
             case CyclopsState.ANGRY:
                 frame = self.angry.frame(texture.width / 15, 2)
                 frame.width *= self.direction
                 draw_texture_pro(texture, frame, self.rect, Vector2(0, 0), 0, WHITE)
+
             case CyclopsState.DEAD:
                 frame = self.dead.frame(texture.width / 15, 6)
                 draw_texture_pro(texture, frame, self.rect, Vector2(0,0), 0, WHITE)
+
             case CyclopsState.ATTACK:
                 frame = self.attack_anim.frame(texture.width / 15, 3)
                 frame.width *= self.direction
                 draw_texture_pro(texture, frame, self.rect, Vector2(0, 0), 0, WHITE)
+
         if self.state != CyclopsState.DEAD and not self.dead.done:
             self.health_bar.draw()
 

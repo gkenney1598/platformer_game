@@ -348,13 +348,26 @@ Next/TO DO:
 * Add startup, pause, intruction screens
 
 ### Date: 04/30/26
-**Refactor level one into own class**
+**Refactor level one and camera into own class**
 ......
 **Implementation**
 *Technical Plan/Credit*: N/A
 *Content Credit*: N/A
-**refactor: level one class**
+**refactor: level one and camera class**
 .......
 Next/TO DO:
 * Major code refactor
 * Add startup, pause, intruction screens
+* Bug fix sedentary jump while sheep
+
+### Date: 04/30/26
+**Refactor components and level one**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**refactor: components and level one**
+.......
+Next/TO DO:
+* Add startup, pause, intruction screens
+* Level two prelim level design

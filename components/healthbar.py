@@ -5,7 +5,7 @@ class HealthBar:
         self.max_health = max_health
         self.current_health = max_health
         self.bar_width = width
-        self.bar_height = height # Top-left corner of the bar
+        self.bar_height = height
         self.bar_rect = Rectangle(x, y, self.bar_width, self.bar_height)
         self.health_rect = Rectangle(x, y, self.bar_width, self.bar_height)
 
