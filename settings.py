@@ -1,7 +1,7 @@
 from pathlib import Path
 
-SCREEN_WIDTH = 900
-SCREEN_HEIGHT = 700
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 800
 TILE_SIZE = 40          # Size of one tile in pixels
 GRAVITY_ENTITY = 250.0        # Downward acceleration (pixels/s/s)
 GRAVITY_PLAYER = 1800

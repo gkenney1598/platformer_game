@@ -371,3 +371,15 @@ Next/TO DO:
 Next/TO DO:
 * Add startup, pause, intruction screens
 * Level two prelim level design
+
+### Date: 05/01/26
+**tweak camera and screen size**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**adjust: tweak camera and screen size**
+.......
+Next/TO DO:
+* Add startup, pause, intruction screens
+* Level two prelim level design

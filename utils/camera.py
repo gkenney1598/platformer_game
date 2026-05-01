@@ -6,9 +6,9 @@ class Camera():
     def __init__(self, player_rect):
         self.camera = Camera2D()
         self.camera.target = Vector2(player_rect.x, player_rect.y) 
-        self.camera.offset = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) 
+        self.camera.offset = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT) 
         self.camera.rotation = 0.0
-        self.camera.zoom = 1.0
+        self.camera.zoom = 1.1
     
     def update(self, player):
         self.camera.target.x = player.rect.x + player.rect.width / 2
@@ -30,5 +30,7 @@ class Camera():
         if self.camera.target.y > max_y:
             self.camera.target.y = max_y
         
-        self.camera.offset.x = SCREEN_WIDTH / 2
-        self.camera.offset.y = SCREEN_HEIGHT / 2
+        self.camera.offset.x = SCREEN_WIDTH / 2 - 35
+        self.camera.offset.y = SCREEN_HEIGHT / 2 - 35
+
+        

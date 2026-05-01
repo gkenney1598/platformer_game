@@ -4,7 +4,7 @@ from components.player import Player
 from settings import *
 from enums import PlayerState, CyclopsState, GameState
 from components.cyclops import Cyclops
-from levels.level_one import Level_One
+from screens.level_one import Level_One
 from utils.camera import Camera
 
 class Game:
