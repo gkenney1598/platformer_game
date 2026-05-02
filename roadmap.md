@@ -383,3 +383,15 @@ Next/TO DO:
 Next/TO DO:
 * Add startup, pause, intruction screens
 * Level two prelim level design
+
+### Date: 05/01/26
+**add startup screen**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [ocean background](https://opengameart.org/content/ocean-background), [font](https://cooltext.com/Logo-Design-Greek-Gold), ship created by me
+**feat: add startup screen**
+.......
+Next/TO DO:
+* Add pause, intruction, gameover screens
+* Level two prelim level design
