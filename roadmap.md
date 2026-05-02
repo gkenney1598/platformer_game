@@ -435,3 +435,15 @@ Next/TO DO:
 * Level two prelim level design
 * Fix bug with camera on level one
 * Improve instructions screen
+
+### Date: 05/02/26
+**fix camera offset**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**bug fix: camera offset**
+.......
+Next/TO DO:
+* Level two prelim level design
+* Improve instructions screen

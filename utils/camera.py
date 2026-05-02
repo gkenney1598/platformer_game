@@ -30,7 +30,7 @@ class Camera():
         if self.camera.target.y > max_y:
             self.camera.target.y = max_y
         
-        self.camera.offset.x = SCREEN_WIDTH / 2 - 35
+        self.camera.offset.x = SCREEN_WIDTH / 2 + TILE_SIZE
         self.camera.offset.y = SCREEN_HEIGHT / 2 - 35
 
         
