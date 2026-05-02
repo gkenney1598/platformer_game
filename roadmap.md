@@ -395,3 +395,16 @@ Next/TO DO:
 Next/TO DO:
 * Add pause, intruction, gameover screens
 * Level two prelim level design
+
+### Date: 05/01/26
+**add instruction screen**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [keys](https://dreammixgames.itch.io/keyboard-keys-for-ui), all other sprites will be credited when used in level 2
+**feat: instruction screen**
+.......
+Next/TO DO:
+* Add pause, gameover screens
+* Level two prelim level design
+* Fix bug with camera on level one

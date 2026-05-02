@@ -52,3 +52,4 @@ class GameState(enumerate):
     PAUSE = 3
     GAME_OVER = 4
     WIN = 5
+    INSTRUCTIONS = 7

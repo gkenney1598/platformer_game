@@ -7,11 +7,13 @@ from components.cyclops import Cyclops
 from screens.level_one import Level_One
 from utils.camera import Camera
 from screens.startup_screen import Startup_Screen
+from screens.instructions import Instruction_Screen
 
 class Game:
     def __init__(self):
         self.level_one = Level_One()
         self.start_up = Startup_Screen()
+        self.instructions = Instruction_Screen()
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.game_state = GameState.STARTUP
         
@@ -25,6 +27,7 @@ class Game:
         self.player.startup()
         self.start_up.startup()
         self.level_one.startup()
+        self.instructions.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -32,6 +35,9 @@ class Game:
         match self.game_state:
             case GameState.STARTUP:
                 self.start_up.update(delta_time)
+                if is_key_pressed(KeyboardKey.KEY_ENTER):
+                    self.game_state = GameState.INSTRUCTIONS
+            case GameState.INSTRUCTIONS:
                 if is_key_pressed(KeyboardKey.KEY_ENTER):
                     self.game_state = GameState.LEVEL_ONE
             case GameState.LEVEL_ONE:
@@ -41,11 +47,15 @@ class Game:
         match self.game_state:
             case GameState.STARTUP:
                 self.start_up.draw()
+            case GameState.INSTRUCTIONS:
+                self.instructions.draw()
             case GameState.LEVEL_ONE:
-                self.level_one.draw(self.player, self.camera)         
+                self.level_one.draw(self.player, self.camera)   
+                  
 
     def shutdown(self):
         self.player.shutdown()
         self.level_one.shutdown()
         self.start_up.shutdown()
+        self.instructions.shutdown()
 
