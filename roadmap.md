@@ -487,3 +487,22 @@ Next/TO DO:
 * Add minimap
 * Refactor collision code to be shared between levels
 * Improve instructions screen
+
+### Date: 05/02/26
+**add gold**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add gold**
+.......
+Next/TO DO:
+* Add altar component
+* Add summon Athena and special combat ability
+* Add crewmates to collect
+* Add big boss cyclops
+* Add win screen
+* Add zoomed in camera
+* Add minimap
+* Refactor collision code to be shared between levels
+* Improve instructions screen

@@ -5,12 +5,13 @@ from enums import PlayerState, CyclopsState
 
 class Level_Two:
     def __init__(self):
-        self.level, self.solid, self.cyclopses, self.vases = Level.parse_level_two(LEVEL_TWO)
+        self.level, self.solid, self.cyclopses, self.vases, self.gold = Level.parse_level_two(LEVEL_TWO)
 
     def startup(self):
         self.solid.startup()
         self.cyclopses.startup()
         self.vases.startup()
+        self.gold.startup()
     
     def update(self, player, delta_time, camera):
         player.update(delta_time, self.level)
@@ -20,15 +21,19 @@ class Level_Two:
         self.handle_vase_interaction(player)
 
         if not player.is_sheep:
+            self.handle_gold_collection(player)
             self.handle_cyclops_interaction(player, delta_time)
     
     def draw(self, player, camera):
+        self.gold.draw_gold_count(player.gold)
+
         begin_mode_2d(camera.camera)
 
         
         self.solid.draw()
         self.cyclopses.draw()
         self.vases.draw()
+        self.gold.draw()
 
         player.draw()
 
@@ -38,13 +43,14 @@ class Level_Two:
         self.solid.shutdown()
         self.cyclopses.shutdown()
         self.vases.shutdown()
+        self.gold.shutdown()
 
     def check_collection(self, player):
         collected_indices = []
         
-        for i, hay in enumerate(self.hay.collection):
+        for i, gold in enumerate(self.gold.collection):
             
-            if check_collision_recs(player.rect, hay) and is_key_pressed(KeyboardKey.KEY_F):
+            if check_collision_recs(player.rect, gold) and is_key_pressed(KeyboardKey.KEY_F):
                 collected_indices.append(i)
                 
         return collected_indices
@@ -62,8 +68,8 @@ class Level_Two:
         collected_indices = self.check_collection(player)
         if collected_indices:
             for index in sorted(collected_indices, reverse=True):
-                self.hay.collection.pop(index)
-                player.hay += 1
+                self.gold.collection.pop(index)
+                player.gold += 1
 
     def handle_vase_interaction(self, player):
         collided_vase = self.check_collision(player, self.vases.collection)
