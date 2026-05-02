@@ -542,3 +542,20 @@ Next/TO DO:
 * Add minimap
 * Refactor collision code to be shared between levels
 * Improve instructions screen
+
+### Date: 05/02/26
+**add athena special attack**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*:
+**feat: add athena special attack**
+.......
+Next/TO DO:
+* Add crewmates to collect
+* Add big boss cyclops
+* Add win screen
+* Add zoomed in camera
+* Add minimap
+* Refactor collision code to be shared between levels
+* Improve instructions screen

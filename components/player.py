@@ -28,6 +28,7 @@ class Player:
         self.held_object = None
         self.can_transform = False
         self.is_sheep = False
+        self.can_special_attack = False
 
         self.health = 100
         self.health_bar = HealthBar(self.health, (self.rect.x + self.rect.width) / 4, y, self.rect.width, 5)
@@ -58,6 +59,10 @@ class Player:
                                 step=1, duration=0.1, duration_left=0.1,
                                 anim_type=AnimationType.ONESHOT,
                                 row=20, sprites_in_row=6)
+        self.special_attack = Animation(first=0, last=7, cur=0,
+                                step=1,duration=0.05,duration_left=0.05,
+                                anim_type=AnimationType.ONESHOT,
+                                row=5, sprites_in_row=8)
         
         #sheep texture
         self.sheep_texture = None
@@ -188,6 +193,12 @@ class Player:
                 if self.dead.cur == self.dead.last:
                     self.rect.y += 10
             
+            case PlayerState.SPECIAL_ATTACK:
+                self.special_attack.update(delta_time)
+                if self.special_attack.done:
+                    self.state = PlayerState.IDLE
+                    self.special_attack.reset()
+            
     def handle_tile_collision(self, level, axis):
         min_col = int(self.bounding_box.x / TILE_SIZE)
         max_col = int((self.bounding_box.x + self.bounding_box.width) / TILE_SIZE)
@@ -281,6 +292,11 @@ class Player:
 
             case PlayerState.DEAD:
                 draw_texture_pro(self.texture, self.dead.frame(self.width, 20), self.rect, Vector2(0, 0), 0.0, WHITE)
+
+            case PlayerState.SPECIAL_ATTACK:
+                frame = self.special_attack.frame(self.width, 5)
+                frame.width *= self.player_direction
+                draw_texture_pro(self.texture, frame, self.rect, Vector2(0, 0), 0.0, WHITE)
         
         self.health_bar.draw()
     

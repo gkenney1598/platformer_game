@@ -3,7 +3,7 @@ class PlayerState(enumerate):
     WALKING = 0
     ATTACKING = 1
     SHEEP = 2
-    POWER_ATTACK = 3
+    SPECIAL_ATTACK = 3
     IDLE = 4
     JUMPING = 5
     SHEEP_IDLE =6

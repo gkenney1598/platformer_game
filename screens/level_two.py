@@ -103,6 +103,7 @@ class Level_Two:
             if self.altar.gold == TOTAL_GOLD:
                 self.altar.offer_complete = True
                 self.athena.shown = True
+                player.can_special_attack = True
 
 
     # something similar will be needed for crewmates
@@ -127,8 +128,12 @@ class Level_Two:
     def handle_cyclops_interaction(self, player, delta_time):
         collided_enemy = self.check_collision(player, self.cyclopses.collection)
         if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
-                player.state = PlayerState.ATTACKING
+            player.state = PlayerState.ATTACKING
+        if is_key_pressed(KeyboardKey.KEY_Q) and player.can_special_attack:
+            print(player.special_attack)
+            player.state = PlayerState.SPECIAL_ATTACK
         if collided_enemy != -1 and self.cyclopses.collection[collided_enemy].state != CyclopsState.DEAD:
             if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
                     self.cyclopses.collection[collided_enemy].health -= 25
             player.health -= self.cyclopses.collection[collided_enemy].attack(delta_time)
+        
