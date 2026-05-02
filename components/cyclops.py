@@ -30,6 +30,7 @@ class Cyclops:
         self.x = x
         self.y = y
         self.rect = Rectangle(x, y, TILE_SIZE * 2, TILE_SIZE * 2.5)
+        self.bounding_box = Rectangle(x, y, TILE_SIZE * 2, TILE_SIZE * 2)
         self.state = CyclopsState.WALKING
         
         self.vx = ENEMY_SPEED
@@ -100,9 +101,11 @@ class Cyclops:
 
         if self.moving:         
             self.rect.x += self.vx * delta_time
+            self.bounding_box.x += self.vx * delta_time
             self.handle_tile_collision(level, 'X')
             
             self.rect.y += self.vy * delta_time
+            self.bounding_box.y += self.vy * delta_time
             self.handle_tile_collision(level, 'Y')
 
         
@@ -122,13 +125,10 @@ class Cyclops:
         return 0
 
     def handle_tile_collision(self, level, axis):
-        # enemy_rect = self.rect
-        # px, py, pw, ph = enemy_rect.x, enemy_rect.y, enemy_rect.width, enemy_rect.height
-        
-        min_col = int(self.rect.x / TILE_SIZE)
-        max_col = int((self.rect.x + self.rect.width) / TILE_SIZE)
-        min_row = int(self.rect.y / TILE_SIZE)
-        max_row = int((self.rect.y + self.rect.height) / TILE_SIZE)
+        min_col = int(self.bounding_box.x / TILE_SIZE)
+        max_col = int((self.bounding_box.x + self.bounding_box.width) / TILE_SIZE)
+        min_row = int(self.bounding_box.y / TILE_SIZE)
+        max_row = int((self.bounding_box.y + self.bounding_box.height) / TILE_SIZE)
 
         for row in range(min_row, max_row + 1):
             for col in range(min_col, max_col + 1):
@@ -140,20 +140,23 @@ class Cyclops:
 
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
-                    if check_collision_recs(self.rect, tile_rect):
+                    if check_collision_recs(self.bounding_box, tile_rect):
                         if (self.state == CyclopsState.ANGRY and level[row][col] == Tiles.SOLID) or self.state != CyclopsState.ANGRY:                        
                             if axis == 'X':
                                     # Reverses direction on horizontal collision
                                     if self.vx > 0:
                                         self.rect.x = tile_rect[0] - self.rect.width
+                                        self.bounding_box.x = tile_rect[0] - self.bounding_box.width
                                     elif self.vx < 0:
                                         self.rect.x = tile_rect[0] + TILE_SIZE
+                                        self.bounding_box.x = tile_rect[0] + TILE_SIZE
                                     self.vx *= -1 # Reverse direction
                                     self.direction = Direction.RIGHT if self.vx > 0 else Direction.LEFT
                                 
                             elif axis == 'Y':
                                 if self.vy >= 0: # Hitting Ground
                                     self.rect.y = tile_rect[1] - self.rect.height
+                                    self.bounding_box.y = tile_rect[1] - self.bounding_box.height
                                     self.is_grounded = True 
                                     
                                 self.vy = 0.0 

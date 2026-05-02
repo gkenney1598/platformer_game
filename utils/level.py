@@ -71,6 +71,8 @@ class Level:
     def parse_level_two(level):
 
         solid = Blocks()
+        cyclopses = Cyclopses()
+        vases = Vases()
 
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
         new_level = [row[:] for row in level] 
@@ -87,7 +89,22 @@ class Level:
                         if r == TILE_ROWS - 1:
                             solid.collection.append(Cave_Grass(x,y))  
                         else:
-                            solid.collection.append(Stone(x,y))   
+                            solid.collection.append(Stone(x,y))
+
+                    case Tiles_Two.CYCLOPS:
+                        new_level[r][c] = Tiles.AIR 
+                        cyclopses.collection.append(Cyclops(x,y))
+                        
+                    case Tiles_Two.BOUNDARY:
+                        new_level[r][c] = Tiles.BOUNDARY
+
+                    case Tiles_Two.VASE_EMPTY:
+                        vases.collection.append(Vase(x, y, False))
+                        new_level[r][c] = Tiles.AIR
+
+                    case Tiles_Two.VASE_FULL:
+                        vases.collection.append(Vase(x, y, True))
+                        new_level[r][c] = Tiles.AIR
                                         
-        return new_level, solid
+        return new_level, solid, cyclopses, vases
     

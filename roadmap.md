@@ -464,4 +464,26 @@ Next/TO DO:
 * Add crewmates to collect
 * Add big boss cyclops
 * Add win screen
+* Add zoomed in camera
+* Add minimap
+* Improve instructions screen
+
+### Date: 05/02/26
+**add cyclopses and vases to level 2**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add cyclops and vases to level 2**
+.......
+Next/TO DO:
+* Create gold to collect
+* Add altar component
+* Add summon Athena and special combat ability
+* Add crewmates to collect
+* Add big boss cyclops
+* Add win screen
+* Add zoomed in camera
+* Add minimap
+* Refactor collision code to be shared between levels
 * Improve instructions screen

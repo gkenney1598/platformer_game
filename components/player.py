@@ -22,6 +22,7 @@ class Player:
         self.is_grounded = False
 
         self.hay = 0
+        self.gold = 0
         self.is_holding = False
         self.state = PlayerState.IDLE
         self.held_object = None
