@@ -422,3 +422,16 @@ Next/TO DO:
 * Level two prelim level design
 * Fix bug with camera on level one
 * Improve instructions screen
+
+### Date: 05/02/26
+**add gameover screen**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: gameover screen**
+.......
+Next/TO DO:
+* Level two prelim level design
+* Fix bug with camera on level one
+* Improve instructions screen

@@ -9,6 +9,7 @@ from utils.camera import Camera
 from screens.startup_screen import Startup_Screen
 from screens.instructions import Instruction_Screen
 from screens.pause import Pause_Screen
+from screens.game_over import Game_Over
 
 class Game:
     def __init__(self):
@@ -16,6 +17,7 @@ class Game:
         self.start_up = Startup_Screen()
         self.instructions = Instruction_Screen()
         self.pause = Pause_Screen()
+        self.game_over = Game_Over()
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
         self.game_state = GameState.STARTUP
         
@@ -31,6 +33,7 @@ class Game:
         self.level_one.startup()
         self.instructions.startup()
         self.pause.startup()
+        self.game_over.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -47,11 +50,24 @@ class Game:
                 self.level_one.update(self.player, delta_time, self.camera)
                 if is_key_pressed(KeyboardKey.KEY_P):
                     self.game_state = GameState.PAUSE
+                if self.player.health < 0 and self.player.dead.done:
+                    self.game_state = GameState.GAME_OVER
             case GameState.PAUSE:
                 if is_key_pressed(KeyboardKey.KEY_ENTER):
                     self.game_state = GameState.LEVEL_ONE
                 if is_key_pressed(KeyboardKey.KEY_I):
-                    self.game_state = GameState.INSTRUCTIONS              
+                    self.game_state = GameState.INSTRUCTIONS
+            case GameState.GAME_OVER:
+                if is_key_pressed(KeyboardKey.KEY_ENTER):
+                    self.level_one.shutdown()
+                    self.player.shutdown()
+                    self.level_one.__init__()
+                    self.level_one.startup()
+                    self.player.__init__(TILE_SIZE * 2, TILE_SIZE * 2)
+                    self.player.startup()
+                    self.game_state = GameState.LEVEL_ONE  
+                    print(self.game_state)
+
 
     def draw(self):
         match self.game_state:
@@ -63,6 +79,8 @@ class Game:
                 self.level_one.draw(self.player, self.camera) 
             case GameState.PAUSE:
                 self.pause.draw()
+            case GameState.GAME_OVER:
+                self.game_over.draw()
                   
 
     def shutdown(self):
@@ -70,5 +88,6 @@ class Game:
         self.level_one.shutdown()
         self.start_up.shutdown()
         self.instructions.shutdown()
-        self.draw.shutdown()
+        self.pause.shutdown()
+        self.game_over.shutdown()
 
