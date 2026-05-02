@@ -447,3 +447,21 @@ Next/TO DO:
 Next/TO DO:
 * Level two prelim level design
 * Improve instructions screen
+
+### Date: 05/02/26
+**add level two layout**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: cave blocks same credit as door
+**feat: add level two layout**
+.......
+Next/TO DO:
+* Add currently existing level two entities
+* Create gold to collect
+* Add altar component
+* Add summon Athena and special combat ability
+* Add crewmates to collect
+* Add big boss cyclops
+* Add win screen
+* Improve instructions screen

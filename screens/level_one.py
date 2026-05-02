@@ -5,7 +5,7 @@ from enums import PlayerState, CyclopsState
 
 class Level_One:
     def __init__(self):
-        self.game_level, self.sheeps, self.cyclopses, self.hay, self.vases, self.blocks, self.fences, self.door = Level.parse_level(LEVEL)
+        self.game_level, self.sheeps, self.cyclopses, self.hay, self.vases, self.blocks, self.fences, self.door = Level.parse_level_one(LEVEL_ONE)
         self.island_background = None
         self.island_background_rec = None
         self.rec = Rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)

@@ -10,6 +10,7 @@ from screens.startup_screen import Startup_Screen
 from screens.instructions import Instruction_Screen
 from screens.pause import Pause_Screen
 from screens.game_over import Game_Over
+from screens.level_two import Level_Two
 
 class Game:
     def __init__(self):
@@ -18,8 +19,10 @@ class Game:
         self.instructions = Instruction_Screen()
         self.pause = Pause_Screen()
         self.game_over = Game_Over()
+        self.level_two = Level_Two()
+
         self.player = Player(TILE_SIZE * 2, TILE_SIZE * 2) 
-        self.game_state = GameState.STARTUP
+        self.game_state = GameState.LEVEL_TWO
         
         # --- Camera Initialization ---
         self.camera = Camera(self.player.rect)
@@ -34,6 +37,7 @@ class Game:
         self.instructions.startup()
         self.pause.startup()
         self.game_over.startup()
+        self.level_two.startup()
 
     def update(self):
         delta_time = get_frame_time()
@@ -67,6 +71,12 @@ class Game:
                     self.player.startup()
                     self.game_state = GameState.LEVEL_ONE  
                     print(self.game_state)
+            case GameState.LEVEL_TWO:
+                self.level_two.update(self.player, delta_time, self.camera)
+                if is_key_pressed(KeyboardKey.KEY_P):
+                    self.game_state = GameState.PAUSE
+                if self.player.health < 0 and self.player.dead.done:
+                    self.game_state = GameState.GAME_OVER
 
 
     def draw(self):
@@ -81,6 +91,8 @@ class Game:
                 self.pause.draw()
             case GameState.GAME_OVER:
                 self.game_over.draw()
+            case GameState.LEVEL_TWO:
+                self.level_two.draw(self.player, self.camera)
                   
 
     def shutdown(self):
@@ -90,4 +102,5 @@ class Game:
         self.instructions.shutdown()
         self.pause.shutdown()
         self.game_over.shutdown()
+        self.level_two.shutdown()
 

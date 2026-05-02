@@ -1,6 +1,6 @@
 from pyray import *
 from game import Game
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, CAVE_BACKGROUND
 
 if __name__ == '__main__':
     init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "platformer")
@@ -14,7 +14,7 @@ if __name__ == '__main__':
         current_game.update()
 
         begin_drawing()
-        clear_background(SKYBLUE)
+        clear_background(CAVE_BACKGROUND)
         current_game.draw()
         end_drawing()
 

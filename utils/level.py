@@ -1,21 +1,16 @@
 from pyray import *
 from settings import *
-from enums import Tiles
+from enums import Tiles, Tiles_Two
 from components.cyclops import Cyclopses, Cyclops
 from components.hay import Hay
 from components.sheep import Sheeps, Sheep
 from components.vase import Vases, Vase
-from components.environment.blocks import Blocks, Grass, Pillar
+from components.environment.blocks import Blocks, Grass, Pillar, Cave_Grass, Stone
 from components.environment.fence import Fences, Fence
 from components.environment.door import Door
 
 class Level:
-
-    def parse_level(level):
-        """
-        Parses the level map, extracts all dynamic entities (coins, enemies), 
-        replaces their spawn points with air, and returns the modified collision map and entity lists.
-        """
+    def parse_level_one(level):
         sheeps = Sheeps()
         cyclopses = Cyclopses()
         hay = Hay()
@@ -70,8 +65,29 @@ class Level:
                 elif new_level[r][c] == Tiles.DOOR:
                     new_level[r][c] == Tiles.AIR
                     door = Door(x, y)
-
-
-
+                    
         return new_level, sheeps, cyclopses, hay, vases, solid, fences, door
+    
+    def parse_level_two(level):
+
+        solid = Blocks()
+
+        # Create a deep copy of the level to modify the tiles, leaving the original map intact
+        new_level = [row[:] for row in level] 
+        
+        #TODO match case
+        for r in range(TILE_ROWS):
+            for c in range(TILE_COLS):
+                x = c * TILE_SIZE
+                y = r * TILE_SIZE
+
+                match new_level[r][c]:
+                    case Tiles_Two.SOLID:
+                        new_level[r][c] = Tiles.SOLID
+                        if r == TILE_ROWS - 1:
+                            solid.collection.append(Cave_Grass(x,y))  
+                        else:
+                            solid.collection.append(Stone(x,y))   
+                                        
+        return new_level, solid
     

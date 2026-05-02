@@ -22,6 +22,18 @@ class Tiles(enumerate):
     VASE_FULL = 7
     DOOR = 8
     FENCE = 9
+
+class Tiles_Two(enumerate):
+    AIR = 0
+    SOLID = 1
+    ALTAR = 2
+    CYCLOPS = 3
+    CREWMATE = 4
+    BOUNDARY = 5
+    GOLD = 6
+    VASE_EMPTY = 7
+    VASE_FULL = 8
+    BOSS_CYCLOPS = 9
     
 class SheepState(enumerate):
     IDLE = 0
