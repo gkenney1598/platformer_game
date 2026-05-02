@@ -5,7 +5,7 @@ from enums import PlayerState, CyclopsState
 
 class Level_Two:
     def __init__(self):
-        self.level, self.solid, self.cyclopses, self.vases, self.gold, self.altar = Level.parse_level_two(LEVEL_TWO)
+        self.level, self.solid, self.cyclopses, self.vases, self.gold, self.altar, self.athena = Level.parse_level_two(LEVEL_TWO)
 
         self.cave_texture = None
 
@@ -16,6 +16,7 @@ class Level_Two:
         self.cyclopses.startup()
         self.vases.startup()
         self.gold.startup()
+        self.athena.startup()
         
     
     def update(self, player, delta_time, camera):
@@ -29,6 +30,9 @@ class Level_Two:
         if not player.is_sheep:
             self.handle_gold_collection(player)
             self.handle_cyclops_interaction(player, delta_time)
+
+        if self.athena.shown:
+            self.athena.update(delta_time)
     
     def draw(self, player, camera):
         self.gold.draw_gold_count(player.gold)
@@ -44,12 +48,16 @@ class Level_Two:
 
         player.draw()
 
+        if self.athena.shown:
+            self.athena.draw()
+
         end_mode_2d()
     
     def shutdown(self):
         self.cyclopses.shutdown()
         self.vases.shutdown()
         self.gold.shutdown()
+        self.athena.shutdown()
 
         unload_texture(self.texture)
 
@@ -94,6 +102,7 @@ class Level_Two:
             player.gold = 0
             if self.altar.gold == TOTAL_GOLD:
                 self.altar.offer_complete = True
+                self.athena.shown = True
 
 
     # something similar will be needed for crewmates

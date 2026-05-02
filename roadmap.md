@@ -524,3 +524,21 @@ Next/TO DO:
 * Add minimap
 * Refactor collision code to be shared between levels
 * Improve instructions screen
+
+### Date: 05/02/26
+**add athena summons**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [athena sprite](https://clembod.itch.io/warrior-free-animation-set?download#google_vignette)
+**feat: add athena summons**
+.......
+Next/TO DO:
+* Add Athena special combat ability
+* Add crewmates to collect
+* Add big boss cyclops
+* Add win screen
+* Add zoomed in camera
+* Add minimap
+* Refactor collision code to be shared between levels
+* Improve instructions screen
