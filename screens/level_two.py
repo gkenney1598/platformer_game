@@ -5,13 +5,18 @@ from enums import PlayerState, CyclopsState
 
 class Level_Two:
     def __init__(self):
-        self.level, self.solid, self.cyclopses, self.vases, self.gold = Level.parse_level_two(LEVEL_TWO)
+        self.level, self.solid, self.cyclopses, self.vases, self.gold, self.altar = Level.parse_level_two(LEVEL_TWO)
+
+        self.cave_texture = None
 
     def startup(self):
-        self.solid.startup()
+        self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\cave.png")
+        self.solid.startup(self.texture)
+        self.altar.startup(self.texture)
         self.cyclopses.startup()
         self.vases.startup()
         self.gold.startup()
+        
     
     def update(self, player, delta_time, camera):
         player.update(delta_time, self.level)
@@ -19,6 +24,7 @@ class Level_Two:
         camera.update(player)
 
         self.handle_vase_interaction(player)
+        self.handle_altar_interaction(player)
 
         if not player.is_sheep:
             self.handle_gold_collection(player)
@@ -34,16 +40,18 @@ class Level_Two:
         self.cyclopses.draw()
         self.vases.draw()
         self.gold.draw()
+        self.altar.draw()
 
         player.draw()
 
         end_mode_2d()
     
     def shutdown(self):
-        self.solid.shutdown()
         self.cyclopses.shutdown()
         self.vases.shutdown()
         self.gold.shutdown()
+
+        unload_texture(self.texture)
 
     def check_collection(self, player):
         collected_indices = []
@@ -79,6 +87,15 @@ class Level_Two:
                 player.gold += 3
             else:
                 player.state = PlayerState.SHEEP_BLEET
+    
+    def handle_altar_interaction(self, player):
+        if check_collision_recs(player.bounding_box, self.altar.rect_pillar) and is_key_pressed(KeyboardKey.KEY_F):
+            self.altar.gold += player.gold
+            player.gold = 0
+            if self.altar.gold == TOTAL_GOLD:
+                self.altar.offer_complete = True
+
+
     # something similar will be needed for crewmates
     # def handle_sheep_interaction(self, player):
     #     collided_sheep = self.check_collision(player, self.sheeps.collection)

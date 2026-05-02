@@ -16,14 +16,14 @@ class Blocks:
 
         self.stone_frame_rec = None
     
-    def startup(self):
+    def startup(self, texture=None):
         self.grass_texture = load_texture(str(THIS_DIR) + "\\resources\\grass.png")
         self.grass_frame_rec = Rectangle(0, 0, self.grass_texture.width, self.grass_texture.height)
 
         self.pillar_texture = load_texture(str(THIS_DIR) + "\\resources\\pillar.png")
         self.pillar_frame_rec = Rectangle(0, 0, self.pillar_texture.width, self.pillar_texture.height)
 
-        self.cave_texture = load_texture(str(THIS_DIR) + "\\resources\\cave.png")
+        self.cave_texture = texture
         self.cave_grass_frame_rec = Rectangle(0, CAVE_TILE_SIZE * 2, CAVE_TILE_SIZE, CAVE_TILE_SIZE)
 
         self.stone_frame_rec= Rectangle(0, CAVE_TILE_SIZE, CAVE_TILE_SIZE, CAVE_TILE_SIZE)
@@ -42,7 +42,6 @@ class Blocks:
     def shutdown(self):
         unload_texture(self.grass_texture)
         unload_texture(self.pillar_texture)
-        unload_texture(self.cave_texture)
 
 class Grass: 
     def __init__(self, x, y):

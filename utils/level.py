@@ -9,6 +9,7 @@ from components.environment.blocks import Blocks, Grass, Pillar, Cave_Grass, Sto
 from components.environment.fence import Fences, Fence
 from components.environment.door import Door
 from components.gold import Gold
+from components.environment.altar import Altar
 
 class Level:
     def parse_level_one(level):
@@ -75,6 +76,7 @@ class Level:
         cyclopses = Cyclopses()
         vases = Vases()
         gold = Gold()
+        altar = None
 
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
         new_level = [row[:] for row in level] 
@@ -111,8 +113,10 @@ class Level:
                     case Tiles_Two.GOLD:
                         gold.collection.append(Rectangle(x, y + TILE_SIZE * 0.5, TILE_SIZE * 0.5, TILE_SIZE * 0.5))
                         new_level[r][c] = Tiles.AIR
-
-
+                    
+                    case Tiles_Two.ALTAR:
+                        altar = Altar(x, y)
+                        new_level[r][c] = Tiles.AIR
                                         
-        return new_level, solid, cyclopses, vases, gold
+        return new_level, solid, cyclopses, vases, gold, altar
     
