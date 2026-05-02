@@ -408,3 +408,17 @@ Next/TO DO:
 * Add pause, gameover screens
 * Level two prelim level design
 * Fix bug with camera on level one
+
+### Date: 05/01/26
+**add pause screen**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: pause screen**
+.......
+Next/TO DO:
+* Add pause, gameover screens
+* Level two prelim level design
+* Fix bug with camera on level one
+* Improve instructions screen
