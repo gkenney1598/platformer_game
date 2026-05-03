@@ -1,13 +1,16 @@
 from pyray import *
 from settings import *
 from utils.level import Level
-from enums import PlayerState, CyclopsState
+from enums import PlayerState, CyclopsState, GameState
+from utils.camera import Camera
 
 class Level_Two:
-    def __init__(self):
+    def __init__(self, player):
         self.level, self.solid, self.cyclopses, self.vases, self.gold, self.altar, self.athena, self.crewmates = Level.parse_level_two(LEVEL_TWO)
 
         self.cave_texture = None
+
+        self.camera = Camera(Vector2(player.rect.x, player.rect.y), Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), 2.5)
 
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\cave.png")
@@ -20,10 +23,10 @@ class Level_Two:
         self.crewmates.startup()
         
     
-    def update(self, player, delta_time, camera):
+    def update(self, player, delta_time):
         player.update(delta_time, self.level)
         self.cyclopses.update(self.level, player, delta_time)
-        camera.update(player)
+        self.camera.update(player, GameState.LEVEL_TWO)
         self.crewmates.update(self.level, delta_time)
 
         self.handle_vase_interaction(player)
@@ -37,11 +40,11 @@ class Level_Two:
         if self.athena.shown:
             self.athena.update(delta_time)
     
-    def draw(self, player, camera):
+    def draw(self, player):
         self.gold.draw_gold_count(player.gold)
         self.crewmates.draw_mate_count()
 
-        begin_mode_2d(camera.camera)
+        begin_mode_2d(self.camera.camera)
 
         
         self.solid.draw()

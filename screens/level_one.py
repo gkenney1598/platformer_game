@@ -1,14 +1,17 @@
 from pyray import *
 from utils.level import Level
 from settings import *
-from enums import PlayerState, CyclopsState
+from enums import PlayerState, CyclopsState, GameState
+from utils.camera import Camera
 
 class Level_One:
-    def __init__(self):
+    def __init__(self, player):
         self.game_level, self.sheeps, self.cyclopses, self.hay, self.vases, self.blocks, self.fences, self.door = Level.parse_level_one(LEVEL_ONE)
         self.island_background = None
         self.island_background_rec = None
         self.rec = Rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT)
+        self.player = player
+        self.camera = Camera(Vector2(player.rect.x, player.rect.y), Vector2(SCREEN_WIDTH / 2 + TILE_SIZE, SCREEN_HEIGHT / 2 - 35), 1.1)
 
     def startup(self):
         self.fences.startup()
@@ -21,12 +24,12 @@ class Level_One:
         self.island_background = load_texture(str(THIS_DIR) + "\\resources\\background.png")
         self.island_background_rec = (0, 0, self.island_background.width, self.island_background.height)
 
-    def update(self, player, delta_time, camera):
+    def update(self, player, delta_time):
 
         player.update(delta_time, self.game_level)
         self.cyclopses.update(self.game_level, player, delta_time)
         self.sheeps.update(self.game_level, delta_time)
-        camera.update(player)
+        self.camera.update(player, GameState.LEVEL_ONE)
 
         if not player.is_sheep:
             self.handle_hay_collection(player)
@@ -42,11 +45,11 @@ class Level_One:
             if check_collision_recs(player.rect, self.door.rect_door) and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT):
                 self.door.open = True
 
-    def draw(self, player, camera):
+    def draw(self, player):
         draw_texture_pro(self.island_background, self.island_background_rec, self.rec, Vector2(0,0), 0, WHITE)
         self.hay.draw_hay_count(player.hay)
              
-        begin_mode_2d(camera.camera)
+        begin_mode_2d(self.camera.camera)
         
         self.door.draw()
         self.fences.draw()
