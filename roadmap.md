@@ -646,14 +646,13 @@ Next/TO DO:
 * make mini-map stick to bound
 
 ### Date: 05/03/26
-**fix respawn after death**
+**update and improve insturctions screen**
 ......
 **Implementation**
 *Technical Plan/Credit*: N/A
 *Content Credit*: N/A
-**bug fix: respawn position after death**
+**bug fix: instructions screen**
 .......
 Next/TO DO:
-* Improve instructions screen
 * Refactor and clean code
 * Refactor collision code to be shared between levels
