@@ -77,9 +77,10 @@ class Sheep:
                 self.vy += GRAVITY_ENTITY * delta_time
                 self.is_grounded = False 
 
-                if not self.is_held and (self.idle.cur < 11 or self.idle.cur > 17):
-                    self.rect.x += self.vx * delta_time
-                    self.handle_tile_collision(level, Axis.X_AXIS)
+                if not self.is_held:
+                    if (self.idle.cur < 11 or self.idle.cur > 17):
+                        self.rect.x += self.vx * delta_time
+                        self.handle_tile_collision(level, Axis.X_AXIS)
                     
                     self.rect.y += self.vy * delta_time
                     self.handle_tile_collision(level, Axis.Y_AXIS)

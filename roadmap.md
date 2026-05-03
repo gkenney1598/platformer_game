@@ -656,3 +656,15 @@ Next/TO DO:
 Next/TO DO:
 * Refactor and clean code
 * Refactor collision code to be shared between levels
+
+### Date: 05/03/26
+**sheep drop bug fix**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**bug fix: sheep doens't drop while eating**
+.......
+Next/TO DO:
+* Refactor and clean code
+* Refactor collision code to be shared between levels
