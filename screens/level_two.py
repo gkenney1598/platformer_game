@@ -124,7 +124,12 @@ class Level_Two:
         if is_key_pressed(KeyboardKey.KEY_Q) and player.can_special_attack:
             player.state = PlayerState.SPECIAL_ATTACK
         if collided_enemy != -1 and self.cyclopses.collection[collided_enemy].state != CyclopsState.DEAD:
-            if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
-                    self.cyclopses.collection[collided_enemy].health -= 25
+            if self.cyclopses.collection[collided_enemy].boss:
+                if is_key_released(KeyboardKey.KEY_Q):
+                    self.cyclopses.collection[collided_enemy].health -= 10
+            else: 
+                if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
+                        self.cyclopses.collection[collided_enemy].health -= 25
             player.health -= self.cyclopses.collection[collided_enemy].attack(delta_time)
+
         

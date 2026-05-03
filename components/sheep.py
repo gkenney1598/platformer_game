@@ -49,7 +49,6 @@ class Sheep:
         self.is_friendly = False
         self.hay = 0
         self.is_held = False
-        self.walking_y = y
         self.is_collected = False
 
         cur = get_random_value(0, 18)
@@ -101,10 +100,7 @@ class Sheep:
         self.rect.x = x + 20
         self.rect.y = y + 10
 
-    def handle_tile_collision(self, level, axis):
-        """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
-
-        
+    def handle_tile_collision(self, level, axis): 
         min_col = int(self.rect.x / TILE_SIZE)
         max_col = int((self.rect.x + self.rect.width) / TILE_SIZE)
         min_row = int(self.rect.y / TILE_SIZE)

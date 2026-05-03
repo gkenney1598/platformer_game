@@ -561,18 +561,19 @@ Next/TO DO:
 * Improve instructions screen
 
 ### Date: 05/02/26
-**add crewmates**
+**add boss cyclops**
 ......
 **Implementation**
 *Technical Plan/Credit*: N/A
-*Content Credit*: [crewmate](https://0x72.itch.io/16x16-pirates-tileset)
-**feat: add crewmates**
+*Content Credit*: N/A
+**feat: add boss cyclops**
 .......
 Next/TO DO:
-* Add big boss cyclops
 * Add win screen
 * Add zoomed in camera
 * Add minimap
+* Add transition between levels and only having to start over on second when die on second
+* Priority bug fix: spawn of entities on second level
 * Refactor collision code to be shared between levels
 * Improve instructions screen
 * Figure out how to make crewmates turn when they all share the same texture

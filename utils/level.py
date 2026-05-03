@@ -126,6 +126,10 @@ class Level:
                     case Tiles_Two.CREWMATE:
                         crewmates.collection.append(CrewMate(x, y))
                         new_level[r][c] = Tiles.AIR
+                    
+                    case Tiles_Two.BOSS_CYCLOPS:
+                        cyclopses.collection.append(Cyclops(x, y, TILE_SIZE * 3, TILE_SIZE * 3.5, True))
+                        new_level[r][c] = Tiles.AIR
 
                                         
         return new_level, solid, cyclopses, vases, gold, altar, athena, crewmates

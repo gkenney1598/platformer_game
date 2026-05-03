@@ -26,10 +26,10 @@ class Cyclopses:
         unload_texture(self.texture)
 
 class Cyclops:
-    def __init__(self, x, y):
+    def __init__(self, x, y, width=TILE_SIZE * 2, height=TILE_SIZE * 2.5, boss=False):
         self.x = x
         self.y = y
-        self.rect = Rectangle(x, y, TILE_SIZE * 2, TILE_SIZE * 2.5)
+        self.rect = Rectangle(x, y, width, height)
         self.bounding_box = Rectangle(x, y, TILE_SIZE * 2, TILE_SIZE * 2)
         self.state = CyclopsState.WALKING
         
@@ -45,6 +45,8 @@ class Cyclops:
 
         self.attack_cooldown = 0.75
         self.attack_timer = 0
+
+        self.boss = boss
 
         self.moving = True
         self.direction = Direction.RIGHT
@@ -160,8 +162,7 @@ class Cyclops:
                                     self.is_grounded = True 
                                     
                                 self.vy = 0.0 
-                                
-                            enemy_rect = self.rect
+                        
 
     def check_player_nearby(self, player_attention_box):
         match self.state:
@@ -197,5 +198,3 @@ class Cyclops:
 
         if self.state != CyclopsState.DEAD and not self.dead.done:
             self.health_bar.draw()
-
-
