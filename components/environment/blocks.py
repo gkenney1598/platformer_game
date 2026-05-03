@@ -23,19 +23,23 @@ class Blocks:
         self.pillar_texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\pillar.png")
         self.pillar_frame_rec = Rectangle(0, 0, self.pillar_texture.width, self.pillar_texture.height)
 
-        self.cave_texture = texture
         self.cave_grass_frame_rec = Rectangle(0, CAVE_TILE_SIZE * 2, CAVE_TILE_SIZE, CAVE_TILE_SIZE)
-
         self.stone_frame_rec= Rectangle(0, CAVE_TILE_SIZE, CAVE_TILE_SIZE, CAVE_TILE_SIZE)
+
+        self.cave_texture = texture
+
 
     def draw(self):
         for block in self.collection:
             if isinstance(block, Grass):
                 draw_texture_pro(self.grass_texture, self.grass_frame_rec, block.rect, Vector2(0, 0), 0.0, WHITE)
+
             elif isinstance(block, Pillar):
                 draw_texture_pro(self.pillar_texture, self.pillar_frame_rec, block.rect, Vector2(0, 0), 0.0, WHITE)
+
             elif isinstance(block, Cave_Grass):
                 draw_texture_pro(self.cave_texture, self.cave_grass_frame_rec, block.rect, Vector2(0, 0), 0.0, WHITE)
+                
             elif isinstance(block, Stone):
                 draw_texture_pro(self.cave_texture, self.stone_frame_rec, block.rect, Vector2(0, 0), 0.0, WHITE)
     

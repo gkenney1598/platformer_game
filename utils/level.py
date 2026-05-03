@@ -6,10 +6,8 @@ from components.hay import Hay
 from components.sheep import Sheeps, Sheep
 from components.vase import Vases, Vase
 from components.environment.blocks import Blocks, Grass, Pillar, Cave_Grass, Stone
-from components.environment.fence import Fences, Fence
-from components.environment.door import Door
+from components.environment.objects import Fences, Fence, Door, Altar
 from components.gold import Gold
-from components.environment.altar import Altar
 from components.athena import Athena
 from components.crewmate import CrewMate, CrewMates
 
