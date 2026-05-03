@@ -17,10 +17,10 @@ class Blocks:
         self.stone_frame_rec = None
     
     def startup(self, texture=None):
-        self.grass_texture = load_texture(str(THIS_DIR) + "\\resources\\grass.png")
+        self.grass_texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\grass.png")
         self.grass_frame_rec = Rectangle(0, 0, self.grass_texture.width, self.grass_texture.height)
 
-        self.pillar_texture = load_texture(str(THIS_DIR) + "\\resources\\pillar.png")
+        self.pillar_texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\pillar.png")
         self.pillar_frame_rec = Rectangle(0, 0, self.pillar_texture.width, self.pillar_texture.height)
 
         self.cave_texture = texture

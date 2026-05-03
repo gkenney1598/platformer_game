@@ -18,7 +18,7 @@ class Athena:
                             row=0, sprites_in_row=3)
         
     def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\resources\\athena.png")
+        self.texture = load_texture(str(THIS_DIR) + "\\resources\\level_two\\athena.png")
 
     def update(self, delta_time):
         self.time += delta_time

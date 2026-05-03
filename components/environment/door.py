@@ -13,7 +13,7 @@ class Door:
         self.open = False
 
     def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\cave.png")
+        self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\level_two\\cave.png")
 
     def draw(self):
 

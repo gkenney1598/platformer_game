@@ -9,7 +9,7 @@ class Instruction_Screen:
         self.text = "Press ENTER to start"
 
     def startup(self):
-        self.instructions = load_texture(str(THIS_DIR) + "\\resources\\instruction.png")
+        self.instructions = load_texture(str(THIS_DIR) + "\\resources\\screens\\instruction.png")
         self.instructions_src = Rectangle(0, 0, self.instructions.width, self.instructions.height)
         self.instructions_dest = Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
 

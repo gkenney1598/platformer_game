@@ -9,7 +9,7 @@ class Gold:
         self.gold_count = Rectangle(5, 5, TILE_SIZE * 0.7, TILE_SIZE * 0.4)
 
     def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\resources\\gold.png")
+        self.texture = load_texture(str(THIS_DIR) + "\\resources\\level_two\\gold.png")
         self.frame_rec = Rectangle(0, 0, self.texture.width, self.texture.height)
 
 

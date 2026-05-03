@@ -8,7 +8,7 @@ class Fences:
         self.source_rect = None
 
     def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\fence.png")
+        self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\level_one\\fence.png")
         self.source_rect = Rectangle(0, 0, self.texture.width, self.texture.height)
     
     def draw(self):

@@ -10,7 +10,7 @@ class Pause_Screen:
         self.instructions_text = "Press I for instructions"
 
     def startup(self):
-        self.pause = load_texture(str(THIS_DIR) + "\\resources\\pause.png")
+        self.pause = load_texture(str(THIS_DIR) + "\\resources\\screens\\pause.png")
         self.pause_src = Rectangle(0, 0, self.pause.width, self.pause.height)
         self.pause_dest = Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
 

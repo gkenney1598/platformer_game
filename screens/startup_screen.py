@@ -26,14 +26,14 @@ class Startup_Screen:
         self.title_src = None
 
     def startup(self):
-        self.ship_texture = load_texture(str(THIS_DIR) + "\\resources\\ship.png")
+        self.ship_texture = load_texture(str(THIS_DIR) + "\\resources\\screens\\ship.png")
         self.ship_src = Rectangle(0, 0, self.ship_texture.width, self.ship_texture.height)
         self.ship_origin = Vector2(100, 100)
 
-        self.ocean_background = load_texture(str(THIS_DIR) + "\\resources\\ocean.png")
+        self.ocean_background = load_texture(str(THIS_DIR) + "\\resources\\screens\\ocean.png")
         self.background_src = Rectangle(0, 0, self.ocean_background.width, self.ocean_background.height)
 
-        self.title = load_texture(str(THIS_DIR) + "\\resources\\title_splash.png")
+        self.title = load_texture(str(THIS_DIR) + "\\resources\\screens\\title_splash.png")
         self.title_src = Rectangle(0, 0, self.title.width, self.title.height)
         self.title_dest = Rectangle(200, 100, self.title.width, self.title.height)
 

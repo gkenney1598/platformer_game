@@ -9,7 +9,7 @@ class Game_Over:
         self.text = "Press ENTER to restart"
 
     def startup(self):
-        self.game_over = load_texture(str(THIS_DIR) + "\\resources\\game_over.png")
+        self.game_over = load_texture(str(THIS_DIR) + "\\resources\\screens\\game_over.png")
         self.game_over_src = Rectangle(0, 0, self.game_over.width, self.game_over.height)
         self.game_over_dest = Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
 

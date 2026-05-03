@@ -21,7 +21,7 @@ class Level_Two:
         self.camera_rect = Rectangle(0, 0, SCREEN_WIDTH, -SCREEN_HEIGHT)
 
     def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\cave.png")
+        self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\level_two\\cave.png")
         self.screen_camera = load_render_texture(int(SCREEN_WIDTH), int(SCREEN_HEIGHT))
         self.screen_mini_map = load_render_texture(int(SCREEN_WIDTH), int(SCREEN_HEIGHT))
 

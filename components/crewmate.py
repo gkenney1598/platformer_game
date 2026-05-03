@@ -13,7 +13,7 @@ class CrewMates:
         self.all_collected = False
     
     def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\resources\\crewmate.png")
+        self.texture = load_texture(str(THIS_DIR) + "\\resources\\level_two\\crewmate.png")
         self.texture_rec = Rectangle(0, 0, self.texture.width, self.texture.height)
     
     def update(self, game_level, delta_time):

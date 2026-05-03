@@ -21,7 +21,7 @@ class Level_One:
         self.sheeps.startup()
         self.hay.startup()
         self.cyclopses.startup()
-        self.island_background = load_texture(str(THIS_DIR) + "\\resources\\background.png")
+        self.island_background = load_texture(str(THIS_DIR) + "\\resources\\level_one\\background.png")
         self.island_background_rec = (0, 0, self.island_background.width, self.island_background.height)
 
     def update(self, player, delta_time):

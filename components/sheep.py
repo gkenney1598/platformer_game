@@ -11,7 +11,7 @@ class Sheeps:
         self.height = None
     
     def startup(self):
-        self.texture = load_texture(str(THIS_DIR) + "\\resources\\sheep.png")
+        self.texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\sheep.png")
         self.width = self.texture.width / 19
         self.height = self.texture.height / 3
     

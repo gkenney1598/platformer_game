@@ -87,7 +87,7 @@ class Player:
         self.rect.height = self.height
         self.bounding_box = Rectangle(self.rect.x + 10, self.rect.y, self.width - 40, self.height)
 
-        self.sheep_texture = load_texture(str(THIS_DIR) + "\\resources\sheep.png")
+        self.sheep_texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\sheep.png")
 
     def update(self, delta_time, level, held_object = None):
 
