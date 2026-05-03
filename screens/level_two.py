@@ -11,9 +11,20 @@ class Level_Two:
         self.cave_texture = None
 
         self.camera = Camera(Vector2(player.rect.x, player.rect.y), Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), 2.5)
+        self.mini_map = Camera(Vector2(player.rect.x, player.rect.y), Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), .25)
+
+        self.screen_mini_map = None 
+        self.mini_map_rect = Rectangle(0, SCREEN_HEIGHT, int(SCREEN_WIDTH / 4),  int(-SCREEN_HEIGHT / 4))
+        self.mini_map_dest = Rectangle(int(SCREEN_WIDTH / 4 * 3 - 50), 50, int(SCREEN_WIDTH / 4), int(SCREEN_HEIGHT / 4))
+
+        self.screen_camera = None
+        self.camera_rect = Rectangle(0, 0, SCREEN_WIDTH, -SCREEN_HEIGHT)
 
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\cave.png")
+        self.screen_camera = load_render_texture(int(SCREEN_WIDTH), int(SCREEN_HEIGHT))
+        self.screen_mini_map = load_render_texture(int(SCREEN_WIDTH), int(SCREEN_HEIGHT))
+
         self.solid.startup(self.texture)
         self.altar.startup(self.texture)
         self.cyclopses.startup()
@@ -26,7 +37,11 @@ class Level_Two:
     def update(self, player, delta_time):
         player.update(delta_time, self.level)
         self.cyclopses.update(self.level, player, delta_time)
+
         self.camera.update(player, GameState.LEVEL_TWO)
+        self.mini_map.update(player, GameState.LEVEL_TWO, True)
+
+
         self.crewmates.update(self.level, delta_time)
 
         self.handle_vase_interaction(player)
@@ -41,25 +56,48 @@ class Level_Two:
             self.athena.update(delta_time)
     
     def draw(self, player):
+
         self.gold.draw_gold_count(player.gold)
         self.crewmates.draw_mate_count()
 
+        begin_texture_mode(self.screen_camera) 
         begin_mode_2d(self.camera.camera)
+        clear_background(CAVE_BACKGROUND)
 
+        self.draw_map(player, False)
+
+        end_mode_2d()
+        end_texture_mode()
+
+        begin_texture_mode(self.screen_mini_map)
+        begin_mode_2d(self.mini_map.camera)
+        clear_background(CAVE_BACKGROUND)
+
+        self.draw_map(player, True)
+
+        end_mode_2d()
+        end_texture_mode()
+
+        draw_texture_rec(self.screen_camera.texture, self.camera_rect, Vector2(0,0), WHITE)   
+        draw_texture_rec(self.screen_mini_map.texture, self.mini_map_rect, Vector2(int(SCREEN_WIDTH / 4 * 3 - 50), 50), WHITE)
+        draw_rectangle_lines_ex(self.mini_map_dest, 5, WHITE)
+
+
+    def draw_map(self, player, is_mini):
+        
+        if not is_mini:
+            self.cyclopses.draw()
+            self.vases.draw()
+            self.gold.draw()
+            self.altar.draw()
+            self.crewmates.draw()
         
         self.solid.draw()
-        self.cyclopses.draw()
-        self.vases.draw()
-        self.gold.draw()
-        self.altar.draw()
-        self.crewmates.draw()
-
         player.draw()
 
         if self.athena.shown:
             self.athena.draw()
-
-        end_mode_2d()
+            
     
     def shutdown(self):
         self.cyclopses.shutdown()
@@ -69,6 +107,8 @@ class Level_Two:
         self.crewmates.draw()
 
         unload_texture(self.texture)
+        unload_render_texture(self.screen_camera)
+        unload_render_texture(self.screen_mini_map)
 
     def check_collection(self, player):
         collected_indices = []

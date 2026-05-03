@@ -22,7 +22,7 @@ class Game:
         self.game_over = Game_Over()
         self.level_two = Level_Two(self.player)
 
-        self.game_state = GameState.LEVEL_ONE
+        self.game_state = GameState.LEVEL_TWO
         
         self.held_sheep_index = None
 

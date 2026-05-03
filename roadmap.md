@@ -493,7 +493,7 @@ Next/TO DO:
 ......
 **Implementation**
 *Technical Plan/Credit*: N/A
-*Content Credit*: N/A
+*Content Credit*: [gold](https://opengameart.org/content/gold-treasure-icons-16x16)
 **feat: add gold**
 .......
 Next/TO DO:
@@ -582,9 +582,9 @@ Next/TO DO:
 **add zoom for second level**
 ......
 **Implementation**
-*Technical Plan/Credit*: N/A
-*Content Credit*: [camera update function for level two](https://www.raylib.com/examples/core/loader.html?name=core_2d_camera)
-**add zoom for second level**
+*Technical Plan/Credit*: [camera update function for level two](https://www.raylib.com/examples/core/loader.html?name=core_2d_camera)
+*Content Credit*: N/A
+**feat: add zoom for second level**
 .......
 Next/TO DO:
 * Add minimap
@@ -595,3 +595,21 @@ Next/TO DO:
 * Refactor collision code to be shared between levels
 * Improve instructions screen
 * Figure out how to make crewmates turn when they all share the same texture
+
+### Date: 05/02/26
+**add minimap**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [camera update function for level two](https://www.raylib.com/examples/core/loader.html?name=core_2d_camera)
+**feat: add minimap**
+.......
+Next/TO DO:
+* Add win screen
+* Add transition between two levels
+* Add transition between levels and only having to start over on second when die on second
+* Priority bug fix: spawn of entities on second level
+* Refactor collision code to be shared between levels
+* Improve instructions screen
+* Figure out how to make crewmates turn when they all share the same texture
+* make mini-map stick to bound
