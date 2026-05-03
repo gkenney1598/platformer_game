@@ -6,7 +6,7 @@ class Win_Screen:
         self.pause = None
         self.pause_src = None
         self.pause_dest = None
-        self.text = "Press ENTER to start"
+        self.text = "Press ENTER to restart"
 
     def startup(self):
         self.pause = load_texture(str(THIS_DIR) + "\\resources\\win.png")

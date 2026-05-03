@@ -60,6 +60,7 @@ class Game:
                 if not self.level_one.door.locked and self.player.is_sheep:
                     if check_collision_recs(self.player.bounding_box, self.level_one.door.rect_door) and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT):
                         self.game_state = GameState.LEVEL_TWO
+                        self.cur_level = GameState.LEVEL_TWO
                         self.player.shutdown()
                         self.player.__init__(TILE_SIZE * 2, SCREEN_HEIGHT - TILE_SIZE * 5)
                         self.player.startup()
@@ -75,7 +76,7 @@ class Game:
                     if self.cur_level == GameState.LEVEL_ONE:
                         self.level_one.shutdown()
                         self.player.shutdown()
-                        self.player.__init__(TILE_SIZE * 2, SCREEN_HEIGHT - TILE_SIZE * 2)
+                        self.player.__init__(TILE_SIZE * 2, SCREEN_HEIGHT - TILE_SIZE * 5)
                         self.player.startup()
                         self.level_one.__init__(self.player)
                         self.level_one.startup()
@@ -83,10 +84,10 @@ class Game:
                     else:
                         self.level_two.shutdown()
                         self.player.shutdown()
-                        self.player.__init__(TILE_SIZE * 2, SCREEN_HEIGHT - TILE_SIZE * 2)
-                        self.player.startup()
                         self.level_two.__init__(self.player)
                         self.level_two.startup()
+                        self.player.__init__(TILE_SIZE * 2, SCREEN_HEIGHT - TILE_SIZE * 5)
+                        self.player.startup()
                         self.game_state = GameState.LEVEL_TWO
 
             case GameState.LEVEL_TWO:
