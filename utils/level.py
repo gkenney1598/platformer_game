@@ -11,6 +11,7 @@ from components.environment.door import Door
 from components.gold import Gold
 from components.environment.altar import Altar
 from components.athena import Athena
+from components.crewmate import CrewMate, CrewMates
 
 class Level:
     def parse_level_one(level):
@@ -79,6 +80,7 @@ class Level:
         gold = Gold()
         altar = None
         athena = None
+        crewmates = CrewMates()
 
         # Create a deep copy of the level to modify the tiles, leaving the original map intact
         new_level = [row[:] for row in level] 
@@ -120,6 +122,11 @@ class Level:
                         altar = Altar(x, y)
                         athena = Athena(x, y)
                         new_level[r][c] = Tiles.AIR
+
+                    case Tiles_Two.CREWMATE:
+                        crewmates.collection.append(CrewMate(x, y))
+                        new_level[r][c] = Tiles.AIR
+
                                         
-        return new_level, solid, cyclopses, vases, gold, altar, athena
+        return new_level, solid, cyclopses, vases, gold, altar, athena, crewmates
     

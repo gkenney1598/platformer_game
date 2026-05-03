@@ -559,3 +559,20 @@ Next/TO DO:
 * Add minimap
 * Refactor collision code to be shared between levels
 * Improve instructions screen
+
+### Date: 05/02/26
+**add crewmates**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: [crewmate](https://0x72.itch.io/16x16-pirates-tileset)
+**feat: add crewmates**
+.......
+Next/TO DO:
+* Add big boss cyclops
+* Add win screen
+* Add zoomed in camera
+* Add minimap
+* Refactor collision code to be shared between levels
+* Improve instructions screen
+* Figure out how to make crewmates turn when they all share the same texture

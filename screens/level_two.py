@@ -5,7 +5,7 @@ from enums import PlayerState, CyclopsState
 
 class Level_Two:
     def __init__(self):
-        self.level, self.solid, self.cyclopses, self.vases, self.gold, self.altar, self.athena = Level.parse_level_two(LEVEL_TWO)
+        self.level, self.solid, self.cyclopses, self.vases, self.gold, self.altar, self.athena, self.crewmates = Level.parse_level_two(LEVEL_TWO)
 
         self.cave_texture = None
 
@@ -17,15 +17,18 @@ class Level_Two:
         self.vases.startup()
         self.gold.startup()
         self.athena.startup()
+        self.crewmates.startup()
         
     
     def update(self, player, delta_time, camera):
         player.update(delta_time, self.level)
         self.cyclopses.update(self.level, player, delta_time)
         camera.update(player)
+        self.crewmates.update(self.level, delta_time)
 
         self.handle_vase_interaction(player)
         self.handle_altar_interaction(player)
+        self.handle_crewmate_interaction(player)
 
         if not player.is_sheep:
             self.handle_gold_collection(player)
@@ -36,6 +39,7 @@ class Level_Two:
     
     def draw(self, player, camera):
         self.gold.draw_gold_count(player.gold)
+        self.crewmates.draw_mate_count()
 
         begin_mode_2d(camera.camera)
 
@@ -45,6 +49,7 @@ class Level_Two:
         self.vases.draw()
         self.gold.draw()
         self.altar.draw()
+        self.crewmates.draw()
 
         player.draw()
 
@@ -58,6 +63,7 @@ class Level_Two:
         self.vases.shutdown()
         self.gold.shutdown()
         self.athena.shutdown()
+        self.crewmates.draw()
 
         unload_texture(self.texture)
 
@@ -105,32 +111,17 @@ class Level_Two:
                 self.athena.shown = True
                 player.can_special_attack = True
 
-
-    # something similar will be needed for crewmates
-    # def handle_sheep_interaction(self, player):
-    #     collided_sheep = self.check_collision(player, self.sheeps.collection)
-    #     if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_F):
-    #         if player.hay > 0:
-    #             self.sheeps.collection[collided_sheep].hay += 1
-    #             player.hay -= 1
-    #             player.can_transform = True
-    #     if collided_sheep >= 0 and is_key_pressed(KeyboardKey.KEY_R) and self.sheeps.collection[collided_sheep].is_friendly:
-    #         player.is_holding = True
-    #         self.held_sheep_index = collided_sheep
-    #         player.hold_object(self.sheeps.collection[collided_sheep])
-
-    #     if is_key_pressed(KeyboardKey.KEY_G) and player.is_holding == True:
-    #         self.sheeps.collection[self.held_sheep_index].is_grounded = False
-            
-    #         self.sheeps.collection[self.held_sheep_index].is_held = False
-    #         player.is_holding = False
+    def handle_crewmate_interaction(self, player):
+        collided_mate = self.check_collision(player, self.crewmates.collection)
+        if collided_mate >= 0 and is_key_pressed(KeyboardKey.KEY_R):
+            self.crewmates.collection[collided_mate].is_collected = True
+            self.crewmates.total_collected += 1
     
     def handle_cyclops_interaction(self, player, delta_time):
         collided_enemy = self.check_collision(player, self.cyclopses.collection)
         if is_mouse_button_down(MouseButton.MOUSE_BUTTON_LEFT):
             player.state = PlayerState.ATTACKING
         if is_key_pressed(KeyboardKey.KEY_Q) and player.can_special_attack:
-            print(player.special_attack)
             player.state = PlayerState.SPECIAL_ATTACK
         if collided_enemy != -1 and self.cyclopses.collection[collided_enemy].state != CyclopsState.DEAD:
             if is_mouse_button_released(MouseButton.MOUSE_BUTTON_LEFT):
