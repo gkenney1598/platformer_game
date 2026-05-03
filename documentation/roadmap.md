@@ -601,7 +601,7 @@ Next/TO DO:
 ......
 **Implementation**
 *Technical Plan/Credit*: N/A
-*Content Credit*: [camera update function for level two](https://www.raylib.com/examples/core/loader.html?name=core_2d_camera)
+*Content Credit*: [camera update function for level two](https://www.raylib.com/examples/core/loader.html?name=core_2d_camera_platformer), [two cameras on screen](https://www.raylib.com/examples/core/loader.html?name=core_2d_camera_split_screen)
 **feat: add minimap**
 .......
 Next/TO DO:
@@ -678,6 +678,7 @@ Next/TO DO:
 **refactor: environment objects**
 **refactor: clean components**
 **refactor: shared collisions and interactions into utils, clean screens**
+**refactor: update incorrect credits**
 .......
 Next/TO DO:
 * playthrough and document bugs, fix any that affect playability
