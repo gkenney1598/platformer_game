@@ -13,9 +13,6 @@ class Game_Over:
         self.game_over_src = Rectangle(0, 0, self.game_over.width, self.game_over.height)
         self.game_over_dest = Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    def update(self, delta_time):
-        pass
-
     def draw(self):
         draw_texture_pro(self.game_over, self.game_over_src, self.game_over_dest, Vector2(0,0), 0, WHITE)
         draw_text(self.text, 315, 350, 30, YELLOW)

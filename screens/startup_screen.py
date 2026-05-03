@@ -55,7 +55,6 @@ class Startup_Screen:
         draw_texture_pro(self.ship_texture, self.ship_src, self.ship_dest, self.ship_origin, self.ship_rotation, WHITE)
         draw_texture_pro(self.title, self.title_src, self.title_dest, Vector2(0,0), 0, WHITE)
         draw_text(self.insturctions, 350, 300, 30, YELLOW)
-        
 
     def shutdown(self):
         unload_texture(self.ship_texture)

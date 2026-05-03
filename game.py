@@ -51,7 +51,7 @@ class Game:
                     self.game_state = GameState.LEVEL_ONE
 
             case GameState.LEVEL_ONE:
-                self.level_one.update(self.player, delta_time)
+                self.level_one.update(delta_time)
                 if is_key_pressed(KeyboardKey.KEY_P):
                     self.game_state = GameState.PAUSE
                 if self.player.health < 0 and self.player.dead.done:
@@ -91,7 +91,7 @@ class Game:
                         self.game_state = GameState.LEVEL_TWO
 
             case GameState.LEVEL_TWO:
-                self.level_two.update(self.player, delta_time)
+                self.level_two.update(delta_time)
                 if is_key_pressed(KeyboardKey.KEY_P):
                     self.game_state = GameState.PAUSE
                 if self.player.health < 0 and self.player.dead.done:
@@ -123,16 +123,22 @@ class Game:
         match self.game_state:
             case GameState.STARTUP:
                 self.start_up.draw()
+                
             case GameState.INSTRUCTIONS:
                 self.instructions.draw()
+
             case GameState.LEVEL_ONE:
-                self.level_one.draw(self.player) 
+                self.level_one.draw() 
+
             case GameState.PAUSE:
                 self.pause.draw()
+
             case GameState.GAME_OVER:
                 self.game_over.draw()
+
             case GameState.LEVEL_TWO:
-                self.level_two.draw(self.player)
+                self.level_two.draw()
+                
             case GameState.WIN:
                 self.win.draw()
                   

@@ -28,44 +28,44 @@ class Level:
                 x = c * TILE_SIZE
                 y = r * TILE_SIZE
 
-                if new_level[r][c] == Tiles.CYCLOPS:
-                    # Enemy position is top-left
-                    cyclopses.append(Cyclops(x, y))
-                    new_level[r][c] = Tiles.AIR 
+                match new_level[r][c]:
+                    case Tiles.CYCLOPS:
+                        cyclopses.append(Cyclops(x, y))
+                        new_level[r][c] = Tiles.AIR 
 
-                elif new_level[r][c] == Tiles.HAY:
-                    hay.append(Rectangle(x, y + TILE_SIZE * 0.3, TILE_SIZE, TILE_SIZE * 0.7))
-                    new_level[r][c] = Tiles.AIR
+                    case Tiles.HAY:
+                        hay.append(Rectangle(x, y + TILE_SIZE * 0.3, TILE_SIZE, TILE_SIZE * 0.7))
+                        new_level[r][c] = Tiles.AIR
 
-                elif new_level[r][c] == Tiles.SHEEP:
-                    sheeps.append(Sheep(x, y))
-                    new_level[r][c] = Tiles.AIR
+                    case Tiles.SHEEP:
+                        sheeps.append(Sheep(x, y))
+                        new_level[r][c] = Tiles.AIR
 
-                elif new_level[r][c] == Tiles.BOUNDARY:
-                    new_level[r][c] = Tiles.BOUNDARY
+                    case Tiles.BOUNDARY:
+                        new_level[r][c] = Tiles.BOUNDARY
 
-                elif new_level[r][c] == Tiles.VASE_EMPTY:
-                    vases.append(Vase(x, y, False))
-                    new_level[r][c] = Tiles.AIR
+                    case Tiles.VASE_EMPTY:
+                        vases.append(Vase(x, y, False))
+                        new_level[r][c] = Tiles.AIR
 
-                elif new_level[r][c] == Tiles.VASE_FULL:
-                    vases.append(Vase(x, y, True))
-                    new_level[r][c] = Tiles.AIR
+                    case Tiles.VASE_FULL:
+                        vases.append(Vase(x, y, True))
+                        new_level[r][c] = Tiles.AIR
 
-                elif new_level[r][c] == Tiles.SOLID:
-                    new_level[r][c] = Tiles.SOLID
-                    if r == TILE_ROWS - 1:           
-                        solid.append(Grass(x, y))
-                    else:
-                        solid.append(Pillar(x, y))
+                    case Tiles.SOLID:
+                        new_level[r][c] = Tiles.SOLID
+                        if r == TILE_ROWS - 1:           
+                            solid.append(Grass(x, y))
+                        else:
+                            solid.append(Pillar(x, y))
 
-                elif new_level[r][c] == Tiles.FENCE:
-                    new_level[r][c] = Tiles.AIR
-                    fences.append(Fence(x, y))
+                    case Tiles.FENCE:
+                        new_level[r][c] = Tiles.AIR
+                        fences.append(Fence(x, y))
 
-                elif new_level[r][c] == Tiles.DOOR:
-                    new_level[r][c] == Tiles.AIR
-                    door = Door(x, y)
+                    case Tiles.DOOR:
+                        new_level[r][c] == Tiles.AIR
+                        door = Door(x, y)
                     
         return new_level, sheeps, cyclopses, hay, vases, solid, fences, door
     

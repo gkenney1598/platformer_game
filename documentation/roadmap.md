@@ -677,7 +677,10 @@ Next/TO DO:
 *Content Credit*: N/A
 **refactor: environment objects**
 **refactor: clean components**
+**refactor: shared collisions and interactions into utils, clean screens**
 .......
 Next/TO DO:
-* Refactor and clean code
-* Refactor collision code to be shared between levels
+* playthrough and document bugs, fix any that affect playability
+* gdd
+* demo video
+* showcase video

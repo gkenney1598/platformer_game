@@ -37,6 +37,6 @@ class Animation:
         y =  tile_size * self.row
         return Rectangle(x, y, tile_size, tile_size)
 
-    def reset(self): # ADDED
+    def reset(self):
         self.cur = self.first
         self.done = False
