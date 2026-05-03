@@ -16,6 +16,9 @@ class Blocks:
 
         self.stone_frame_rec = None
     
+    def append(self, block):
+        self.collection.append(block)
+    
     def startup(self, texture=None):
         self.grass_texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\grass.png")
         self.grass_frame_rec = Rectangle(0, 0, self.grass_texture.width, self.grass_texture.height)

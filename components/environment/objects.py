@@ -53,6 +53,9 @@ class Fences:
         self.texture = None
         self.source_rect = None
 
+    def append(self, fence):
+        self.collection.append(fence)
+
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\.\\resources\\level_one\\fence.png")
         self.source_rect = Rectangle(0, 0, self.texture.width, self.texture.height)

@@ -7,9 +7,7 @@ from utils.anim import Animation
 #TODO: refactor previous code to use PlayerState
 #TODO: debug being able to tranform into sheep while holding a sheep
 class Player:
-    def __init__(self, x, y):
-        self.start_x = x 
-        self.start_y = y
+    def __init__(self, x, y): 
         self.width = PLAYER_WIDTH
         self.height = PLAYER_HEIGHT
 
@@ -81,6 +79,7 @@ class Player:
         
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\odysseus.png")
+
         self.width = int(self.texture.width) / 13
         self.rect.width = self.width
         self.height = self.texture.height / 21
@@ -89,115 +88,18 @@ class Player:
 
         self.sheep_texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\sheep.png")
 
-    def update(self, delta_time, level, held_object = None):
+    def update(self, delta_time, level):
+        self.handle_input(delta_time)
+        self.move(delta_time, level)
+        self.animate(delta_time)
 
-        #Handle User Input
-        self.vx = 0.0
-        if is_key_down(KeyboardKey.KEY_A):
-            self.vx = -PLAYER_SPEED
-            self.player_direction = Direction.LEFT
-            if self.is_sheep:
-                self.state = PlayerState.SHEEP_WALKING
-            elif self.state != PlayerState.JUMPING:
-                self.state = PlayerState.WALKING
-
-        if is_key_down(KeyboardKey.KEY_D):
-            self.vx = PLAYER_SPEED
-            self.player_direction = Direction.RIGHT
-            if self.is_sheep:
-                self.state = PlayerState.SHEEP_WALKING
-            elif self.state != PlayerState.JUMPING:
-                self.state = PlayerState.WALKING
-
-        if is_key_released(KeyboardKey.KEY_A) or is_key_released(KeyboardKey.KEY_D):
-            if self.is_sheep:
-                self.state = PlayerState.SHEEP_IDLE
-            else:
-                self.state = PlayerState.IDLE
-
-        if self.is_grounded:
-            self.vy = 0.0
-            
-        if is_key_pressed(KeyboardKey.KEY_SPACE) and self.is_grounded:
-            self.vy = JUMP_VELOCITY
-            if not self.is_sheep:
-                self.state = PlayerState.JUMPING
-
-        self.vy += GRAVITY_PLAYER * delta_time
-        if self.vy > 1000:
-            self.vy = 1000
-
-        self.is_grounded = False
-
-        self.rect.x += self.vx * delta_time
-        self.attention_box.x = self.rect.x - 200
-        self.bounding_box.x = self.rect.x + 20       
-        self.handle_tile_collision(level, 'X')
         
-        self.rect.y += self.vy * delta_time
-        self.attention_box.y = self.rect.y - 10
-        self.bounding_box.y = self.rect.y
-        self.handle_tile_collision(level, 'Y')
-
-        self.health_bar.update(self.rect.x + self.rect.width / 4, self.rect.y - 5)
-        self.health_bar.update_health(self.health)
-        
-        self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
-
-        if is_key_pressed(KeyboardKey.KEY_T) and self.can_transform:
-            self.is_sheep = True
-            self.state = PlayerState.SHEEP_IDLE
-
-        if is_key_pressed(KeyboardKey.KEY_Y):
-            self.is_sheep = False
-            self.state = PlayerState.IDLE
 
         if self.is_holding:
             self.held_object.move_with_player(self.rect.x, self.rect.y - self.held_object.rect.height)
         
         if self.health <= 0:
             self.state = PlayerState.DEAD
-        
-        #Update animations
-        match self.state:
-            case PlayerState.SHEEP_IDLE:
-                self.sheep_idle.update(delta_time)
-
-            case PlayerState.SHEEP_WALKING:
-                self.sheep_walk.update(delta_time)
-
-            case PlayerState.SHEEP_BLEET:
-                self.sheep_bleet.update(delta_time)
-                
-                if self.sheep_bleet.done:
-                    self.state = PlayerState.SHEEP_IDLE
-                    self.sheep_bleet.reset()
-
-            case PlayerState.IDLE:
-                self.idle.update(delta_time)
-
-            case PlayerState.JUMPING:
-                self.jump.update(delta_time)
-
-            case PlayerState.WALKING:
-                self.walk.update(delta_time)
-
-            case PlayerState.ATTACKING:
-                self.attack.update(delta_time)
-                if self.attack.done:
-                    self.state = PlayerState.IDLE
-                    self.attack.reset()
-
-            case PlayerState.DEAD:
-                self.dead.update(delta_time)
-                if self.dead.cur == self.dead.last:
-                    self.rect.y += 10
-            
-            case PlayerState.SPECIAL_ATTACK:
-                self.special_attack.update(delta_time)
-                if self.special_attack.done:
-                    self.state = PlayerState.IDLE
-                    self.special_attack.reset()
             
     def handle_tile_collision(self, level, axis):
         min_col = int(self.bounding_box.x / TILE_SIZE)
@@ -238,15 +140,7 @@ class Player:
                                 self.rect.y = tile_rect[1] + TILE_SIZE
                                 self.bounding_box.y = tile_rect[1] + TILE_SIZE
                                 
-                            self.vy = 0.0 
-                            
-    
-    def reset(self):
-        self.rect.x = self.start_x
-        self.rect.y = self.start_y
-        self.vx = 0.0
-        self.vy = 0.0
-        self.is_grounded = False
+                            self.vy = 0.0               
 
     def hold_object(self, held_object):
         if self.is_holding:
@@ -303,3 +197,105 @@ class Player:
     def shutdown(self):
         unload_texture(self.texture)
 
+    def handle_input(self, delta_time):
+        self.vx = 0.0
+        if is_key_down(KeyboardKey.KEY_A):
+            self.vx = -PLAYER_SPEED
+            self.player_direction = Direction.LEFT
+            if self.is_sheep:
+                self.state = PlayerState.SHEEP_WALKING
+            elif self.state != PlayerState.JUMPING:
+                self.state = PlayerState.WALKING
+
+        if is_key_down(KeyboardKey.KEY_D):
+            self.vx = PLAYER_SPEED
+            self.player_direction = Direction.RIGHT
+            if self.is_sheep:
+                self.state = PlayerState.SHEEP_WALKING
+            elif self.state != PlayerState.JUMPING:
+                self.state = PlayerState.WALKING
+
+        if is_key_released(KeyboardKey.KEY_A) or is_key_released(KeyboardKey.KEY_D):
+            if self.is_sheep:
+                self.state = PlayerState.SHEEP_IDLE
+            else:
+                self.state = PlayerState.IDLE
+
+        if self.is_grounded:
+            self.vy = 0.0
+            
+        if is_key_pressed(KeyboardKey.KEY_SPACE) and self.is_grounded:
+            self.vy = JUMP_VELOCITY
+            if not self.is_sheep:
+                self.state = PlayerState.JUMPING
+
+        self.vy += GRAVITY_PLAYER * delta_time
+        if self.vy > 1000:
+            self.vy = 1000
+        
+        self.is_grounded = False
+        
+        if is_key_pressed(KeyboardKey.KEY_T) and self.can_transform:
+            self.is_sheep = True
+            self.state = PlayerState.SHEEP_IDLE
+
+        if is_key_pressed(KeyboardKey.KEY_Y):
+            self.is_sheep = False
+            self.state = PlayerState.IDLE
+
+    def move(self, delta_time, level):
+        self.rect.x += self.vx * delta_time
+        self.attention_box.x = self.rect.x - 200
+        self.bounding_box.x = self.rect.x + 20       
+        self.handle_tile_collision(level, 'X')
+        
+        self.rect.y += self.vy * delta_time
+        self.attention_box.y = self.rect.y - 10
+        self.bounding_box.y = self.rect.y
+        self.handle_tile_collision(level, 'Y')
+
+        self.health_bar.update(self.rect.x + self.rect.width / 4, self.rect.y - 5)
+        self.health_bar.update_health(self.health)
+        
+        self.rect.x = max(0, min(self.rect.x, WORLD_WIDTH - self.rect.width))
+    
+    def animate(self, delta_time):
+        match self.state:
+            case PlayerState.SHEEP_IDLE:
+                self.sheep_idle.update(delta_time)
+
+            case PlayerState.SHEEP_WALKING:
+                self.sheep_walk.update(delta_time)
+
+            case PlayerState.SHEEP_BLEET:
+                self.sheep_bleet.update(delta_time)
+                
+                if self.sheep_bleet.done:
+                    self.state = PlayerState.SHEEP_IDLE
+                    self.sheep_bleet.reset()
+
+            case PlayerState.IDLE:
+                self.idle.update(delta_time)
+
+            case PlayerState.JUMPING:
+                self.jump.update(delta_time)
+
+            case PlayerState.WALKING:
+                self.walk.update(delta_time)
+
+            case PlayerState.ATTACKING:
+                self.attack.update(delta_time)
+                if self.attack.done:
+                    self.state = PlayerState.IDLE
+                    self.attack.reset()
+
+            case PlayerState.DEAD:
+                self.dead.update(delta_time)
+                if self.dead.cur == self.dead.last:
+                    self.rect.y += 10
+            
+            case PlayerState.SPECIAL_ATTACK:
+                self.special_attack.update(delta_time)
+                if self.special_attack.done:
+                    self.state = PlayerState.IDLE
+                    self.special_attack.reset()

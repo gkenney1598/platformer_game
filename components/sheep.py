@@ -9,6 +9,9 @@ class Sheeps:
         self.texture = None
         self.width = None
         self.height = None
+
+    def append(self, sheep):
+        self.collection.append(sheep)
     
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\\level_one\\sheep.png")

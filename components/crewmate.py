@@ -12,6 +12,9 @@ class CrewMates:
         self.total_collected = 0
         self.all_collected = False
     
+    def append(self, crewmate):
+        self.collection.append(crewmate)
+    
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\\level_two\\crewmate.png")
         self.texture_rec = Rectangle(0, 0, self.texture.width, self.texture.height)

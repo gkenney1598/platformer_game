@@ -9,6 +9,9 @@ class Cyclopses:
         self.collection = []
         self.texture = None
     
+    def append(self, cyclops):
+        self.collection.append(cyclops)
+        
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\\cyclops.png")
 
@@ -31,7 +34,6 @@ class Cyclops:
         self.y = y
         self.rect = Rectangle(x, y, width, height)
         self.bounding_box = Rectangle(x, y, TILE_SIZE * 2, TILE_SIZE * 2)
-        self.state = CyclopsState.WALKING
         
         self.vx = ENEMY_SPEED
         self.vy = 0.0 
@@ -50,6 +52,8 @@ class Cyclops:
 
         self.moving = True
         self.direction = Direction.RIGHT
+        self.state = CyclopsState.WALKING
+
         self.walk = Animation(first=0, last=11, cur=0, step=1, 
                               duration=0.2, duration_left=0.2, 
                               anim_type=AnimationType.REPEATING,
@@ -85,17 +89,21 @@ class Cyclops:
                     self.vy = 0.0
                 self.vy += GRAVITY_ENTITY * delta_time
                 self.is_grounded = False 
+
                 self.angry_timer += delta_time
+
                 if player_rect.x < self.rect.x:
                     self.vx = -ENEMY_SPEED
                     self.direction = Direction.LEFT
                 else:
                     self.vx = ENEMY_SPEED
                     self.direction = Direction.RIGHT
+
                 self.angry.update(delta_time)
 
             case CyclopsState.ATTACK:
                 self.attack_anim.update(delta_time)
+
                 if self.attack_anim.done:
                     self.state = CyclopsState.ANGRY
                     self.attack_anim.reset()
@@ -123,6 +131,7 @@ class Cyclops:
             self.moving = False
             self.attack_timer = 0
             return 10
+        
         self.attack_timer += delta_time
         return 0
 
@@ -145,14 +154,13 @@ class Cyclops:
                     if check_collision_recs(self.bounding_box, tile_rect):
                         if (self.state == CyclopsState.ANGRY and level[row][col] == Tiles.SOLID) or self.state != CyclopsState.ANGRY:                        
                             if axis == 'X':
-                                    # Reverses direction on horizontal collision
                                     if self.vx > 0:
                                         self.rect.x = tile_rect[0] - self.rect.width
                                         self.bounding_box.x = tile_rect[0] - self.bounding_box.width
                                     elif self.vx < 0:
                                         self.rect.x = tile_rect[0] + TILE_SIZE
                                         self.bounding_box.x = tile_rect[0] + TILE_SIZE
-                                    self.vx *= -1 # Reverse direction
+                                    self.vx *= -1
                                     self.direction = Direction.RIGHT if self.vx > 0 else Direction.LEFT
                                 
                             elif axis == 'Y':

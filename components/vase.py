@@ -6,6 +6,9 @@ class Vases:
         self.texture = None
         self.frame_rec = None
         self.collection = []
+    
+    def append(self, vase):
+        self.collection.append(vase)
 
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\\vase.png")

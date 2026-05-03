@@ -676,6 +676,7 @@ Next/TO DO:
 *Technical Plan/Credit*: N/A
 *Content Credit*: N/A
 **refactor: environment objects**
+**refactor: clean components**
 .......
 Next/TO DO:
 * Refactor and clean code
