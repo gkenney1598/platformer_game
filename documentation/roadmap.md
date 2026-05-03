@@ -681,7 +681,19 @@ Next/TO DO:
 **refactor: update incorrect credits**
 .......
 Next/TO DO:
-* playthrough and document bugs, fix any that affect playability
+* gdd
+* demo video
+* showcase video
+
+### Date: 05/03/26
+**fix cyclops angry at player sheep**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**bug fix: fix cyclops angry at player sheep**
+.......
+Next/TO DO:
 * gdd
 * demo video
 * showcase video

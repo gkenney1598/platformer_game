@@ -114,8 +114,8 @@ class Game:
 
                     self.level_one.startup()
                     self.level_two.startup()
-                    
-                    self.game_state = GameState.LEVEL_ONE  
+                    self.cur_level = GameState.LEVEL_ONE
+                    self.game_state = GameState.STARTUP 
 
 
 

@@ -17,7 +17,7 @@ class Cyclopses:
 
     def update(self, game_level, player, delta_time):
         for cyclops in self.collection:
-            cyclops.update(delta_time, game_level, player.rect)
+            cyclops.update(delta_time, game_level, player)
             if not player.is_sheep:
                 cyclops.check_player_nearby(player.attention_box)
 
@@ -71,7 +71,7 @@ class Cyclops:
                               anim_type=AnimationType.ONESHOT,
                             row=6, sprites_in_row=9) 
 
-    def update(self, delta_time, level, player_rect):
+    def update(self, delta_time, level, player):
         match self.state:
             case CyclopsState.WALKING:
                 if self.is_grounded:
@@ -92,12 +92,15 @@ class Cyclops:
 
                 self.angry_timer += delta_time
 
-                if player_rect.x < self.rect.x:
+                if player.rect.x < self.rect.x:
                     self.vx = -ENEMY_SPEED
                     self.direction = Direction.LEFT
                 else:
                     self.vx = ENEMY_SPEED
                     self.direction = Direction.RIGHT
+                
+                if player.is_sheep:
+                    self.state = CyclopsState.WALKING
 
                 self.angry.update(delta_time)
 
