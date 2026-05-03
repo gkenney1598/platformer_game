@@ -14,7 +14,7 @@ from screens.level_two import Level_Two
 
 class Game:
     def __init__(self):
-        self.player = Player(TILE_SIZE * 2, SCREEN_HEIGHT - TILE_SIZE * 2) 
+        self.player = Player(TILE_SIZE * 2, TILE_SIZE * (TILE_ROWS - 5)) 
         self.level_one = Level_One(self.player)
         self.start_up = Startup_Screen()
         self.instructions = Instruction_Screen()
@@ -23,7 +23,7 @@ class Game:
         self.win = Win_Screen()
         self.level_two = Level_Two(self.player)
 
-        self.game_state = GameState.WIN
+        self.game_state = GameState.STARTUP
         
         self.cur_level = GameState.LEVEL_ONE
 
@@ -57,8 +57,8 @@ class Game:
                 if self.player.health < 0 and self.player.dead.done:
                     self.game_state = GameState.GAME_OVER
                 
-                if not self.level_one.door.locked:
-                    if check_collision_recs(self.player.bounding_box, self.level_one.door.rect_door):
+                if not self.level_one.door.locked and self.player.is_sheep:
+                    if check_collision_recs(self.player.bounding_box, self.level_one.door.rect_door) and is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT):
                         self.game_state = GameState.LEVEL_TWO
                         self.player.shutdown()
                         self.player.__init__(TILE_SIZE * 2, SCREEN_HEIGHT - TILE_SIZE * 5)

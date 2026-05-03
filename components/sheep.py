@@ -67,7 +67,7 @@ class Sheep:
     def update(self, delta_time, level):
 
         #check if sheep is in fenced area
-        if not self.is_collected and self.rect.x > SHEEP_COLLECTION_BOUNDS[0] * TILE_SIZE and self.rect.x < SHEEP_COLLECTION_BOUNDS[1] * TILE_SIZE and self.rect.y > SCREEN_HEIGHT - 4 * TILE_SIZE:
+        if not self.is_collected and self.rect.x > SHEEP_COLLECTION_BOUNDS[0] * TILE_SIZE and self.rect.x < SHEEP_COLLECTION_BOUNDS[1] * TILE_SIZE and self.rect.y > SCREEN_HEIGHT - 7 * TILE_SIZE:
             self.is_collected = True
 
         match self.state:

@@ -28,7 +28,7 @@ class Player:
         self.held_object = None
         self.can_transform = False
         self.is_sheep = False
-        self.can_special_attack = True
+        self.can_special_attack = False
 
         self.health = 100
         self.health_bar = HealthBar(self.health, (self.rect.x + self.rect.width) / 4, y, self.rect.width, 5)

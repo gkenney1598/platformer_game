@@ -629,3 +629,20 @@ Next/TO DO:
 * Improve instructions screen
 * Figure out how to make crewmates turn when they all share the same texture
 * make mini-map stick to bound
+
+### Date: 05/03/26
+**fix transtion between levels**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**bug fix: transtion between levels**
+.......
+Next/TO DO:
+* Add win screen
+* Add transition between levels and only having to start over on second when die on second
+* Refactor and clean code
+* Refactor collision code to be shared between levels
+* Improve instructions screen
+* Figure out how to make crewmates turn when they all share the same texture
+* make mini-map stick to bound

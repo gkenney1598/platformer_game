@@ -57,9 +57,6 @@ class Level_Two:
     
     def draw(self, player):
 
-        self.gold.draw_gold_count(player.gold)
-        self.crewmates.draw_mate_count()
-
         begin_texture_mode(self.screen_camera) 
         begin_mode_2d(self.camera.camera)
         clear_background(CAVE_BACKGROUND)
@@ -78,9 +75,12 @@ class Level_Two:
         end_mode_2d()
         end_texture_mode()
 
+        
         draw_texture_rec(self.screen_camera.texture, self.camera_rect, Vector2(0,0), WHITE)   
         draw_texture_rec(self.screen_mini_map.texture, self.mini_map_rect, Vector2(int(SCREEN_WIDTH / 4 * 3 - 50), 50), WHITE)
         draw_rectangle_lines_ex(self.mini_map_dest, 5, WHITE)
+        self.gold.draw_gold_count(player.gold)
+        self.crewmates.draw_mate_count()
 
 
     def draw_map(self, player, is_mini):
