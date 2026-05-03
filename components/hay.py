@@ -20,7 +20,7 @@ class Hay:
     
     def draw_hay_count(self, player_hay):
         for i in range(player_hay):
-            self.hay_count.x = 30 * i
+            self.hay_rect.x = 30 * i
             draw_texture_pro(self.texture, self.frame_rec, self.hay_rect, Vector2(0,0), 0, WHITE)
 
     def shutdown(self):

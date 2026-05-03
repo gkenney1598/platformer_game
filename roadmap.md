@@ -606,9 +606,25 @@ Next/TO DO:
 .......
 Next/TO DO:
 * Add win screen
-* Add transition between two levels
 * Add transition between levels and only having to start over on second when die on second
 * Priority bug fix: spawn of entities on second level
+* Refactor collision code to be shared between levels
+* Improve instructions screen
+* Figure out how to make crewmates turn when they all share the same texture
+* make mini-map stick to bound
+
+### Date: 05/03/26
+**add win screen and transition between levels**
+......
+**Implementation**
+*Technical Plan/Credit*: N/A
+*Content Credit*: N/A
+**feat: add win screen and transition between levels**
+.......
+Next/TO DO:
+* Add win screen
+* Add transition between levels and only having to start over on second when die on second
+* Refactor and clean code
 * Refactor collision code to be shared between levels
 * Improve instructions screen
 * Figure out how to make crewmates turn when they all share the same texture

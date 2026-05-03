@@ -10,6 +10,7 @@ class CrewMates:
         self.texture_rec = None
         self.mate_count_rect = Rectangle(0, TILE_SIZE, TILE_SIZE * 0.7, TILE_SIZE * 0.8)
         self.total_collected = 0
+        self.all_collected = False
     
     def startup(self):
         self.texture = load_texture(str(THIS_DIR) + "\\resources\\crewmate.png")
@@ -19,6 +20,9 @@ class CrewMates:
         for mate in self.collection:
             if not mate.is_collected:
                 mate.update(delta_time, game_level, self.texture_rec)
+        
+        if self.total_collected == len(self.collection):
+            self.all_collected = True
     
     def draw(self):
         for mate in self.collection:
