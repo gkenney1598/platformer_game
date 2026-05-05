@@ -1,4 +1,4 @@
-# The Much-Traveled Man
+# The Many-Adventured Man
 By Grace Kenney for COSC 481
 [Demo Video](https://drive.google.com/file/d/1wywKlc2jJ3wNJYcXm4vdAmeyi8zuXfNI/view?usp=drive_link)
 
