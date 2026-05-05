@@ -22,7 +22,7 @@ COSC 481 Students and Classics fans/curious
 ## Concept
 
 ### Gameplay Overview
-At first, Odysseus and his crew will crash onto a deserted island. The player will see Odysseus' crew mates being dragged into a cave while Odysseus is left behind but will not be able to follow and enter the cave until they figure out the puzzle on the first level, which includes befriending all the sheep in order to sneak into the cave with them. There, the player will be greeted with a gloomy environment and a limited camera view in order to mimic the darkness of a cave. The player will then traverse the cave, collecting objects that can be used to make an offering to Athena (the goddess who favors him) and summon her. Summoning Athena will grant Odysseus a new attack power. Additionally he will run into a few of his crewmates along the way to rescue. At the end, he will find the cyclops who kidnapped his crew mates and battle him. The cyclops will not be able to be defeated without the ability gained by summoning the goddess. The game will end when he rescues the rest of his crew mates. There will be minimal instructions and the player will be left to figure out what will solve the possible, although knowledge of the original story will help. Some frustration from the player can be expected.
+The game starts after Odysseus’ crewmates are captured and he is stranded outside the cave. The player is not able to enter the cave until they figure out the puzzle on the first level, which includes befriending all the sheep in order to sneak into the cave with them. There, the player will be greeted with a gloomy environment and a limited camera view in order to mimic the darkness of a cave. The player will then traverse the cave, collecting coins that can be used to make an offering to Athena (the goddess who favors him) and summon her. Summoning Athena will grant Odysseus a new attack power. Additionally he will run into a few of his crewmates along the way to rescue. At the end, he will find the cyclops who kidnapped his crew mates and battle him. The cyclops will not be able to be defeated without the ability gained by summoning the goddess. The game will end when he rescues the rest of his crew mates. There will be minimal instructions and the player will be left to figure out what will solve the possible, although knowledge of the original story will help. Some frustration from the player can be expected.
 
 ### Theme interpretation
 The driving action of the game will be for the player to rescue Odysseus' crewmates after they are kidnapped. Along the way, there will be other problems to solve, like how to enter the cave and how to defeat the final cyclops. These answers to these questions will not be given to the player but will have to figured out, although the game mechanics should give a clue to the solution. 
@@ -57,7 +57,7 @@ All editing and drawing performed via Krita and Photos windows app. Full sprite 
 * Attack: Use a spear to defeat cyclops
 * Collect and feed: collect hay and feed to befriend the sheep
 * Grab and drop: pick up other sheep to bring to another location
-* Sheep tranformation: sneak closer to cyclops enemies and be able to sniff out hidden objects in burials
+* Sheep tranformation: sneak closer to cyclops enemies and be able to sniff out hidden objects in vases
 
 <img width="230" height="128" alt="image" src="https://github.com/user-attachments/assets/1b195834-51fd-4cac-a89f-66709d3a0f43" />
 Fight
@@ -102,7 +102,7 @@ High Level: severely impacts playability
 | Win without crewmates | Mid | Rarely win screen will show if not all crewmates collected |
 | Non-boss cyclops special attack|Low|using special attack on normal cyclops causes player to lose health|
 
-### Next steps
+### Future steps
 * Add music and sound effects
 * Clean up crewmate sprite and make it turn directions when walking
 * Use other colored sprites in crewmate sheet to have variety
